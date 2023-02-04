@@ -32,8 +32,9 @@ public class DriveConstants {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
-            getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(19.5, 4.0, 8.5, 13.15);
+//    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
+//            getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -44,7 +45,7 @@ public class DriveConstants {
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
     public static double WHEEL_RADIUS = 1.9685; // in
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
+    public static double GEAR_RATIO = 1.024; // output (wheel) speed / input (motor) speed
     public static double TRACK_WIDTH = 10.8125; // in
 
     /*
@@ -84,7 +85,7 @@ public class DriveConstants {
      * Maximum Angular Velocity is calculated as: maximum velocity / trackWidth * (180 / Math.PI) but capped at 360°/s.
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
      */
-    public static double MAX_VEL = 59.57470216843153;
+    public static double MAX_VEL = 50.26;
     public static double MAX_ACCEL = 59.57470216843153;
     public static double MAX_ANG_VEL = Math.toRadians(315.6882312138729);
     public static double MAX_ANG_ACCEL = Math.toRadians(315.6882312138729);

@@ -38,6 +38,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
     public static double MAX_POWER = 0.7;
     public static double DISTANCE = 100; // in
 
+
     @Override
     public void runOpMode() throws InterruptedException {
         if (RUN_USING_ENCODER) {
