@@ -44,8 +44,8 @@ public class BasicTeleop extends OpMode {
         telemetry.addData("| Gamepad2 Left Bumper:   ", "Release cone                    |");
         telemetry.addData("+-------------------------", "--------------------------------+");
 
-        stevesRobot.setTurretMotorPower(0.55*gamepad2.right_stick_x);  //* moves the turret at 75% maximum power
-        stevesRobot.setLiftMotorPower(-gamepad2.left_stick_y * 2.25);        //* moves the lift up and down
+        stevesRobot.setTurretMotorPower(0.55*gamepad2.right_stick_x);  //* moves the turret at 55% maximum power
+        stevesRobot.setLiftMotorPower(-gamepad2.left_stick_y * 2.210329);        //* moves the lift up and down
 
         if (gamepad2.left_bumper) {
             stevesRobot.setinTakeServoPosition(1.0);                                        // Have the intake mechanism deposit the cone
