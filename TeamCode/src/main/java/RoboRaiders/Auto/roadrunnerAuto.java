@@ -19,26 +19,24 @@ public class roadrunnerAuto extends LinearOpMode {
 
         Trajectory step1 = drive.trajectoryBuilder(startPose)
                 .splineToConstantHeading(new Vector2d(-36.5,52),Math.toRadians(-90))
-                .build();
-        Trajectory step2 = drive.trajectoryBuilder(startPose)
                 .splineToConstantHeading(new Vector2d(-36.5, 47), Math.toRadians(-90))
                 .build();
-        Trajectory step3 = drive.trajectoryBuilder(startPose)
+        Trajectory step2 = drive.trajectoryBuilder(step1.end())
                 .forward(32)
                 .build();
-        Trajectory step4 = drive.trajectoryBuilder(startPose)
+        Trajectory step3 = drive.trajectoryBuilder(step2.end())
                 .splineTo(new Vector2d(-40,10), Math.toRadians(-140))
                 .build();
-        Trajectory step5 = drive.trajectoryBuilder(startPose)
+        Trajectory step4 = drive.trajectoryBuilder(step3.end())
                 .back(12)
                 .build();
-        Trajectory step6 = drive.trajectoryBuilder(startPose)
+        Trajectory step5 = drive.trajectoryBuilder(step4.end())
                 .forward(8)
                 .build();
-        Trajectory step7 = drive.trajectoryBuilder(startPose)
+        Trajectory step6 = drive.trajectoryBuilder(step5.end())
                 .forward(22)
                 .build();
-        Trajectory step8 = drive.trajectoryBuilder(startPose)
+        Trajectory step7 = drive.trajectoryBuilder(step6.end())
                 .back(10)
                 .build();
 //        Trajectory step6 = drive.trajectoryBuilder(startPose)
@@ -56,7 +54,6 @@ public class roadrunnerAuto extends LinearOpMode {
         drive.followTrajectory(step5);
         drive.followTrajectory(step6);
         drive.followTrajectory(step7);
-        drive.followTrajectory(step8);
 
 
 
