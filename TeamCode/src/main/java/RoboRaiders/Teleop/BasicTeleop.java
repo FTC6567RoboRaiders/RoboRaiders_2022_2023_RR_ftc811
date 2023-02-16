@@ -3,6 +3,8 @@ package RoboRaiders.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import RoboRaiders.Robot.TestRobot;
 import RoboRaiders.Utilities.Logger.Logger;
 
@@ -45,7 +47,10 @@ public class BasicTeleop extends OpMode {
         telemetry.addData("+-------------------------", "--------------------------------+");
 
         stevesRobot.setTurretMotorPower(0.55*gamepad2.right_stick_x);  //* moves the turret at 55% maximum power
-        stevesRobot.setLiftMotorPower(-gamepad2.left_stick_y * 2.210329);        //* moves the lift up and down
+        stevesRobot.setLiftMotorPower(-gamepad2.left_stick_y * 2.210329);        //* moves the lift up and down at 221.0329%
+
+        telemetry.addData("Lift Motor Power: ", String.valueOf(-gamepad2.left_stick_y * 2.210329));
+
 
         if (gamepad2.left_bumper) {
             stevesRobot.setinTakeServoPosition(1.0);                                        // Have the intake mechanism deposit the cone
@@ -59,8 +64,6 @@ public class BasicTeleop extends OpMode {
         doDrive();
 
         telemetry.update();
-
-
     }
 
 
@@ -88,7 +91,6 @@ public class BasicTeleop extends OpMode {
         double lTrigger = gamepad1.left_trigger;
         double rTrigger = gamepad1.right_trigger;
 
-//        telemetry.addLine("MAKE SURE THE ARROWS ON MOTORS 1 AND 3 FACE THE DRIVER");
 //        telemetry.addLine("Variables");
 //        telemetry.addData("botHeading", String.valueOf(botHeading));
 //        telemetry.addData("y", String.valueOf(y));
