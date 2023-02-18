@@ -211,6 +211,7 @@ public class RR_ChuckBot_LIT {
     //**********************************************************************************************
 
     public void   liftResetEncoders() { liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); }
+
     public void   setLiftPower(double liftPower) { liftMotor.setPower(liftPower); }
     public void   setLiftMotorTargetPosition(double liftPosition) { liftMotor.setTargetPosition((int)liftPosition); }
     public void   setLiftMotorVelocity(double liftVelocity) { liftMotor.setVelocity(liftVelocity); }
@@ -219,6 +220,10 @@ public class RR_ChuckBot_LIT {
     public void   setLiftRunWithoutEncoders() { liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); }
 
     public void   setLiftPositionGround() { setLiftMotorTargetPosition(lift_ground); }
+    public void   setLiftPositionLow() { setLiftMotorTargetPosition(lift_low); }
+    public void   setLiftPositionMid() { setLiftMotorTargetPosition(lift_middle); }
+    public void   setLiftPositionHigh() { setLiftMotorTargetPosition(lift_high); }
+
 
     public double getLiftEncoderCounts() { return liftMotor.getCurrentPosition(); }
 
