@@ -46,6 +46,8 @@ public class roadrunnerAuto extends LinearOpMode {
                 .lineTo(new Vector2d(-29,20.25))
                 .addTemporalMarker(2.0, () -> {
                     //code in here, this is where we put the code to lift the lift.
+                    while (Math.abs(Chuckbot.getTurretEncoderCounts() - (-192.0)) > 5.0) {
+                    }
                     Chuckbot.setinTakeServoPosition(1.0);
                 })
                 .addTemporalMarker(0.5, () -> {
