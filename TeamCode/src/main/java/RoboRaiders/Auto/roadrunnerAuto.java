@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Autonomous
 public class roadrunnerAuto extends LinearOpMode {
 
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -18,6 +19,10 @@ public class roadrunnerAuto extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         Trajectory step1 = drive.trajectoryBuilder(startPose)
+                .addTemporalMarker(0.5, () -> {
+                    //code in here, this is where we put the code to lift the lift.
+
+                })
                 .splineToConstantHeading(new Vector2d(-36.5,52),Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(-36.5, 47), Math.toRadians(-90))
                 .forward(32)
@@ -51,7 +56,7 @@ public class roadrunnerAuto extends LinearOpMode {
 //        drive.followTrajectory(step5);
 
 
-
+//Wade was here!
 
 
 

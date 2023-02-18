@@ -84,7 +84,7 @@ public class TeleopMotorTestWithVelocity extends OpMode {
 
             case GOING_UP:
               //  myLogger.Debug("myState, encoder",String.valueOf(Math.abs(mBot.getMotorPosition() - LEFT_TURN_MAX)));
-                myLogger.Debug("myState, encoder",String.valueOf(myState) + ", " +c + ", " + String.valueOf(Math.abs(mBot.getMotorPosition() - LEFT_TURN_MAX)));
+                myLogger.Debug("myState, encoder",String.valueOf(myState) + ", " + ", " + String.valueOf(Math.abs(mBot.getMotorPosition() - LEFT_TURN_MAX)));
                 if (Math.abs(mBot.getMotorPosition() - LEFT_TURN_MAX) < 10) {
                     mBot.setMotorVelocity(0.0);
                     myState = States.DEPOSITING_CONE;
