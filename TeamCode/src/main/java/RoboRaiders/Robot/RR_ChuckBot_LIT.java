@@ -210,20 +210,15 @@ public class RR_ChuckBot_LIT {
     //
     //**********************************************************************************************
 
-    public void liftResetEncoders() {
-
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-    }
-
-    public void setLiftPower(double liftPower) { liftMotor.setPower(liftPower); }
-    public void setLiftMotorTargetPosition(double liftPosition) { liftMotor.setTargetPosition((int)liftPosition); }
-    public void setLiftMotorVelocity(double liftVelocity) { liftMotor.setVelocity(liftVelocity); }
+    public void   liftResetEncoders() { liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); }
+    public void   setLiftPower(double liftPower) { liftMotor.setPower(liftPower); }
+    public void   setLiftMotorTargetPosition(double liftPosition) { liftMotor.setTargetPosition((int)liftPosition); }
+    public void   setLiftMotorVelocity(double liftVelocity) { liftMotor.setVelocity(liftVelocity); }
     public double getLiftEncoderCounts() { return liftMotor.getCurrentPosition(); }
-    public void liftRunWithEncodersSTP() { liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); }
-    public void liftRunWithEncoders() { liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); }
-    public void liftRunWithoutEncoders() { liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); }
-    public void setLiftMotorPower(double liftPower) { liftMotor.setPower(liftPower); }
+    public void   liftRunWithEncodersSTP() { liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); }
+    public void   liftRunWithEncoders() { liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); }
+    public void   liftRunWithoutEncoders() { liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); }
+    public void   setLiftMotorPower(double liftPower) { liftMotor.setPower(liftPower); }
 
 
     //**********************************************************************************************
