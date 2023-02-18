@@ -67,22 +67,16 @@ public class RR_ChuckBot_LIT {
 
         // Save reference to hardware map
         hwMap = ahwMap;
-
-
         turretMotor = hwMap.get(DcMotorEx.class, "turretMotor");
-
         liftMotor = hwMap.get(DcMotorEx.class, "liftMotor");
 
         turretMotor.setDirection(DcMotor.Direction.FORWARD);
-
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         turretMotor.setPower(0.0);
-
         liftMotor.setPower(0.0);
 
         // Stop and reset encoders
@@ -110,7 +104,6 @@ public class RR_ChuckBot_LIT {
     // TURRET METHODS
     //
     //**********************************************************************************************
-
 
     /**
      * calculates the number of encoder counts to travel a given distance for the turret
@@ -217,34 +210,14 @@ public class RR_ChuckBot_LIT {
 
     }
 
-    public void setLiftPower(double liftPower) {
-
-        liftMotor.setPower(liftPower);
-
-    }
-    public void setLiftMotorTargetPosition(double liftPosition){
-        liftMotor.setTargetPosition((int)liftPosition);
-    }
-    public void setLiftMotorVelocity(double liftVelocity){
-        liftMotor.setVelocity(liftVelocity);
-
-    }
-
-    public double getLiftEncoderCounts(){
-        return liftMotor.getCurrentPosition();
-    }
-    public void liftRunWithEncodersSTP(){
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-    public void liftRunWithEncoders(){
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-    public void liftRunWithoutEncoders(){
-        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-    public void setLiftMotorPower(double liftPower){
-        liftMotor.setPower(liftPower);
-    }
+    public void setLiftPower(double liftPower) { liftMotor.setPower(liftPower); }
+    public void setLiftMotorTargetPosition(double liftPosition) { liftMotor.setTargetPosition((int)liftPosition); }
+    public void setLiftMotorVelocity(double liftVelocity) { liftMotor.setVelocity(liftVelocity); }
+    public double getLiftEncoderCounts() { return liftMotor.getCurrentPosition(); }
+    public void liftRunWithEncodersSTP() { liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); }
+    public void liftRunWithEncoders() { liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); }
+    public void liftRunWithoutEncoders() { liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); }
+    public void setLiftMotorPower(double liftPower) { liftMotor.setPower(liftPower); }
 
 
     //**********************************************************************************************
