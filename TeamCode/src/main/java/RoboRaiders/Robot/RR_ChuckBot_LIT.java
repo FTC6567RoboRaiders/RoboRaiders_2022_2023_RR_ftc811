@@ -37,16 +37,16 @@ public class RR_ChuckBot_LIT {
     public Orientation iza_angles;
 
     /* Public Constants */
-    double turret_home = 0.0;
-    double turret_right = 94.5; // 1/4 of a turn
-    double turret_left = -94.5; // 1/4 of a turn
-    double turret_back = -185.0; // 1/2 of a turn
-    double turretFinalPosition;
+    public double turret_home = 0.0;
+    public double turret_right = 94.5; // 1/4 of a turn
+    public double turret_left = -94.5; // 1/4 of a turn
+    public double turret_back = -185.0; // 1/2 of a turn
+    public double turretFinalPosition;
 
-    double lift_ground = 150.0;
-    double lift_high = 7550.0;
-    double lift_middle = 5950.0;
-    double lift_low = 3050.0;
+    public double lift_ground = 150.0;
+    public double lift_high = 7550.0;
+    public double lift_middle = 5950.0;
+    public double lift_low = 3050.0;
 
     public static double robotHeading;
     public boolean firstTimeCalled = true;
@@ -206,7 +206,11 @@ public class RR_ChuckBot_LIT {
         return turretMotor.getCurrentPosition();
 
     }
-
+    //**********************************************************************************************
+    //
+    // LIFT METHODS
+    //
+    //**********************************************************************************************
     public void liftResetEncoders() {
 
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
