@@ -22,30 +22,25 @@ public class RR_ChuckBot_LIT {
     public DcMotorEx turretMotor = null;
     public DcMotorEx liftMotor = null;
     private Servo inTake;
-    public BNO055IMU imu;
+
 
     /* Local OpMode Members */
     public HardwareMap hwMap = null;
 
     /* Public Variables */
-    public BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-    public Orientation angles;
-    public double integratedZAxis;
-    public double iza_lastHeading = 0.0;
-    public double iza_deltaHeading;
-    public float iza_newHeading;
-    public Orientation iza_angles;
+
 
     /* Public Constants */
     public double turret_home = 0.0;
     public double turret_right = 94.5; // 1/4 of a turn
     public double turret_left = -94.5; // 1/4 of a turn
-    public double turret_back = -185.0; // 1/2 of a turn
+    public double turret_back = -192.0; // 1/2 of a turn was -185, -145, -135, -192, -220
     public double turretFinalPosition;
 
     public double lift_ground = 150.0;
     public double lift_high = 7550.0;
     public double lift_middle = 5950.0;
+    public double lift_middle_deposit = 5392;
     public double lift_low = 3050.0;
 
     public static double robotHeading;
@@ -73,9 +68,6 @@ public class RR_ChuckBot_LIT {
         turretMotor.setDirection(DcMotor.Direction.FORWARD);
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         turretMotor.setPower(0.0);
         liftMotor.setPower(0.0);
 
@@ -84,18 +76,15 @@ public class RR_ChuckBot_LIT {
         liftResetEncoders();
 
         turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // define and initialize the servo
         inTake = hwMap.get(Servo.class, "inTakeServo");
-        setinTakeServoPosition(0.5); // set to home position
+        setinTakeServoPosition(0.0); // set to intake cone position
 
-        // Define and initialize sensors
-        imu = hwMap.get(BNO055IMU.class, "imu");
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        //parameters.mode = BNO055IMU.SensorMode.IMU;
-        imu.initialize(parameters);
 
     }
 
@@ -195,9 +184,16 @@ public class RR_ChuckBot_LIT {
      * @return the encoder position
      */
     public double getTurretEncoderCounts() {
-
         return turretMotor.getCurrentPosition();
     }
+
+    public void setTurretPositionHome() {setTurretMotorTargetPosition(turret_home);}
+    public void setTurretPositionBack() {setTurretMotorTargetPosition(turret_back);}
+    public void setTurretPositionRight() {setTurretMotorTargetPosition(turret_right);}
+    public void setTurretPositionLeft() {setTurretMotorTargetPosition(turret_left);}
+
+
+
     //**********************************************************************************************
     //
     // END TURRET METHODS
@@ -219,10 +215,11 @@ public class RR_ChuckBot_LIT {
     public void   setLiftRunWithEncoders() { liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); }
     public void   setLiftRunWithoutEncoders() { liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); }
 
-    public void   setLiftPositionGround() { setLiftMotorTargetPosition(lift_ground); }
-    public void   setLiftPositionLow() { setLiftMotorTargetPosition(lift_low); }
-    public void   setLiftPositionMid() { setLiftMotorTargetPosition(lift_middle); }
-    public void   setLiftPositionHigh() { setLiftMotorTargetPosition(lift_high); }
+    public void   setLiftPositionGround() { setLiftMotorTargetPosition(-lift_ground); }
+    public void   setLiftPositionLow() { setLiftMotorTargetPosition(-lift_low); }
+    public void   setLiftPositionMid() { setLiftMotorTargetPosition(-lift_middle); }
+    public void   setLiftPositionMidDeposit() {setLiftMotorTargetPosition(-lift_middle_deposit);}
+    public void   setLiftPositionHigh() { setLiftMotorTargetPosition(-lift_high); }
 
 
     public double getLiftEncoderCounts() { return liftMotor.getCurrentPosition(); }
@@ -245,13 +242,15 @@ public class RR_ChuckBot_LIT {
      *
      * @param servoPosition - servo position
      *                      - 0.5 center position
-     *                      - 0.0 intake position
-     *                      - 1.0 scoring position
+     *                      - 0.0 in take cone
+     *                      - 1.0 deposit cone
      *
      */
     public void setinTakeServoPosition(double servoPosition){
         inTake.setPosition(servoPosition);
     }
+
+    public double getInTakePosition() { return inTake.getPosition(); }
 
 
     //**********************************************************************************************
@@ -259,80 +258,6 @@ public class RR_ChuckBot_LIT {
     // END SERVO METHODS
     //
     //**********************************************************************************************
-
-    //**********************************************************************************************
-    //
-    // IMU METHODS
-    //
-    //**********************************************************************************************
-
-
-    /**
-     * Gets the current heading from the IMU
-     * @return current heading in degrees
-     */
-    public float getHeading() {
-
-        float heading;
-
-//        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES); //this sets up the how we want the IMU to report data
- //       heading = Math.abs(angles.firstAngle); //heading is equal to the absolute value of the first angle
-        heading = -imu.getAngularOrientation().firstAngle;
-
-        return heading;
-    }
-
-
-    /**
-     * Re-initializes the IMU
-     */
-    public void resetIMU() {
-
-        imu.initialize(parameters);
-    }
-
-    /**
-     * Calculates and returns an integrate Z-Axis (aka heading).  This handles when the heading crosses
-     * 180 or -180
-     * @return integrated Z-Axis
-     */
-    public double getIntegratedZAxis() {
-
-        // This sets up the how we want the IMU to report data
-        iza_angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        // Obtain the heading (Z-Axis)
-        iza_newHeading = iza_angles.firstAngle;
-
-        // Calculate the change in the heading from the previous heading
-        iza_deltaHeading = iza_newHeading - iza_lastHeading;
-
-        // Bosch IMU wraps at 180, so compensate for this
-        if (iza_deltaHeading <= -180.0) {
-
-            iza_deltaHeading += 360.0;
-        }
-        else if (iza_deltaHeading >= 180.0) {
-
-            iza_deltaHeading -= 360;
-        }
-
-        // Calculate the integratedZAxis
-        integratedZAxis += iza_deltaHeading;
-
-        // Save the current heading for the next call to this method
-        iza_lastHeading = iza_newHeading;
-
-        return integratedZAxis;
-    }
-
-    //**********************************************************************************************
-    //
-    // END IMU METHODS
-    //
-    //**********************************************************************************************
-
-
 
 
 
