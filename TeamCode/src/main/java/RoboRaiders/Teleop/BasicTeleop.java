@@ -47,9 +47,9 @@ public class BasicTeleop extends OpMode {
         telemetry.addData("+-------------------------", "--------------------------------+");
 
         stevesRobot.setTurretMotorPower(0.55*gamepad2.right_stick_x);  //* moves the turret at 55% maximum power
-        stevesRobot.setLiftMotorPower(-gamepad2.left_stick_y * 2.210329);        //* moves the lift up and down at 221.0329%
+        stevesRobot.setLiftMotorPower(-gamepad2.left_stick_y * 2.3);        //* moves the lift up and down at 221.0329%
 
-        telemetry.addData("Lift Motor Power: ", String.valueOf(-gamepad2.left_stick_y * 2.210329));
+        telemetry.addData("Lift Motor Power: ", String.valueOf(stevesRobot.getLiftMotorPower()) );
 
 
         if (gamepad2.left_bumper) {

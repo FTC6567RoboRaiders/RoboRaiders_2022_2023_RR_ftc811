@@ -448,7 +448,7 @@ public class TestRobot {
     public void setLiftMotorPower(double liftPower){
         liftMotor.setPower(liftPower);
     }
-
+    public double getLiftMotorPower() { return liftMotor.getPower(); }
 
     //**********************************************************************************************
     //

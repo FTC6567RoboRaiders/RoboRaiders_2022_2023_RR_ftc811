@@ -34,23 +34,27 @@ public class roadrunnerAuto extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-36.5,52),Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(-36.5, 47), Math.toRadians(-90))
                 .forward(22)
-                .splineTo(new Vector2d(-40,10), Math.toRadians(-128))
+                .splineTo(new Vector2d(-40,10), Math.toRadians(-136))
                 .addTemporalMarker(1.25, () -> {
                     //code in here, this is where we put the code to lift the lift.
                     Chuckbot.setTurretPositionBack();
                     Chuckbot.turretRunWithEncodersSTP();
-                    Chuckbot.setTurretMotorVelocity(125);
+                    Chuckbot.setTurretMotorVelocity(110);
                 })
                 .build();
         Trajectory step2 = drive.trajectoryBuilder(step1.end())
-                .lineTo(new Vector2d(-29,20.25))
-                .addTemporalMarker(2.0, () -> {
+                .lineTo(new Vector2d(-29.0,23.25))
+                .addTemporalMarker(3.25, () -> {
                     //code in here, this is where we put the code to lift the lift.
                     while (Math.abs(Chuckbot.getTurretEncoderCounts() - (-192.0)) > 5.0) {
+                        telemetry.addData("turret encoder count: ", String.valueOf(Math.abs(Chuckbot.getTurretEncoderCounts() - (-192.0))));
+                        telemetry.update();
                     }
-                    Chuckbot.setinTakeServoPosition(1.0);
+                    Chuckbot.setLiftPositionMidDeposit();
+                    Chuckbot.setLiftRunWithEncodersSTP();
+                    Chuckbot.setLiftMotorVelocity(1500.0);
                 })
-                .addTemporalMarker(0.5, () -> {
+                .addTemporalMarker(4.0, () -> {
                     //code in here, this is where we put the code to lift the lift.
                     Chuckbot.setinTakeServoPosition(1.0);
                 })

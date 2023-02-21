@@ -40,7 +40,7 @@ public class RR_ChuckBot_LIT {
     public double lift_ground = 150.0;
     public double lift_high = 7550.0;
     public double lift_middle = 5950.0;
-    public double lift_middle_deposit = 5392;
+    public double lift_middle_deposit = 5000.0;
     public double lift_low = 3050.0;
 
     public static double robotHeading;
