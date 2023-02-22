@@ -42,6 +42,7 @@ public class RR_ChuckBot_LIT {
     public double lift_middle = 5950.0;
     public double lift_middle_deposit = 5000.0;
     public double lift_low = 3050.0;
+    public double lift_stack5 = 1800.0;
 
     public static double robotHeading;
     public boolean firstTimeCalled = true;
@@ -220,7 +221,7 @@ public class RR_ChuckBot_LIT {
     public void   setLiftPositionMid() { setLiftMotorTargetPosition(-lift_middle); }
     public void   setLiftPositionMidDeposit() {setLiftMotorTargetPosition(-lift_middle_deposit);}
     public void   setLiftPositionHigh() { setLiftMotorTargetPosition(-lift_high); }
-
+    public void   setLiftPositionStack5() { setLiftMotorTargetPosition(-lift_stack5); }
 
     public double getLiftEncoderCounts() { return liftMotor.getCurrentPosition(); }
 
