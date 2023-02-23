@@ -33,7 +33,7 @@ public class roadrunnerAuto extends LinearOpMode {
                 })
                 .splineToConstantHeading(new Vector2d(-36.5,52),Math.toRadians(-90))
                 .splineToConstantHeading(new Vector2d(-36.5, 47), Math.toRadians(-90))
-                .forward(22)
+                .forward(21.75)
                 .splineTo(new Vector2d(-40,10), Math.toRadians(-136))
                 .addTemporalMarker(1.25, () -> {
                     //After 1.25 seconds rotate the turret to the back position
@@ -59,39 +59,54 @@ public class roadrunnerAuto extends LinearOpMode {
                 })
                 .build();
         Trajectory step3 = drive.trajectoryBuilder(step2.end())
-                //START OF WADES ADDED CODE
-                .addTemporalMarker(.25, () -> {
-                    Chuckbot.setLiftPositionStack5();
-                    Chuckbot.setLiftRunWithEncodersSTP();
-                    Chuckbot.setLiftMotorVelocity(3000.0);
-                })
+                .splineTo(new Vector2d(-58, 15.25), Math.toRadians(-180)) // Wade changed the cords, the were (-58, 13)
+                .forward(4.7) // this was in step 4 originally
                 .addTemporalMarker(.05, () -> {
                     Chuckbot.setTurretPositionHome();
                     Chuckbot.turretRunWithEncodersSTP();
                     Chuckbot.setTurretMotorVelocity(200);
                 })
-                //END OF WADES CODE
-                .splineTo(new Vector2d(-58, 15.25), Math.toRadians(-180))//Wade changed the cords, the were (-58, 13)
+                .addTemporalMarker(.5, () -> {
+                    Chuckbot.setLiftPositionStack5Collect();
+                    Chuckbot.setLiftRunWithEncodersSTP();
+                    Chuckbot.setLiftMotorVelocity(3000.0);
+                })
+//                .addTemporalMarker(.6, () -> {
+//                    Chuckbot.setinTakeServoPosition(0.0);
+//                })
                 .build();
         Trajectory step4 = drive.trajectoryBuilder(step3.end())
-                .forward(4.375) //wade changed was 22
+                .addTemporalMarker(.05, () -> {
+                    Chuckbot.setLiftPositionHigh();
+                    Chuckbot.setLiftRunWithEncodersSTP();
+                    Chuckbot.setLiftMotorVelocity(3000.0);
+                })
+                .back(3.0)
+                .splineTo(new Vector2d(-29, 5), -222)
+
                 .build();
-        Trajectory step5 = drive.trajectoryBuilder(step4.end())
-                .back(10)
-                .build();
-//        Trajectory step6 = drive.trajectoryBuilder(startPose)
-//                .splineTo(new Vector2d(-28,14), Math.toRadians(60))
+
+//        Trajectory step5 = drive.trajectoryBuilder(step4.end())
+//                .addTemporalMarker(.05, () -> {
+//                    Chuckbot.setLiftPositionStack5Collect();
+//                    Chuckbot.setLiftRunWithEncodersSTP();
+//                    Chuckbot.setLiftMotorVelocity(3000.)
+//                    Chuckbot.setinTakeServoPosition(0.0);
+//                    Chuckbot.setLiftPositionHigh();
+//                })
 //                .build();
-//        Trajectory step7 = drive.trajectoryBuilder(startPose)
-//                .strafeTo(new Vector2d(-33,12))
-//                .build();
+
         waitForStart();
         drive.followTrajectory(step1);
         drive.followTrajectory(step2);
-        sleep(1000); //added by wade
+        sleep(1000);
         drive.followTrajectory(step3); // added by wade
-        sleep(1000); //added by wade
-        drive.followTrajectory(step4); // added by wade
+        sleep(500);
+        Chuckbot.setinTakeServoPosition(0.0);
+        sleep(1000);
+        drive.followTrajectory(step4);
+//        drive.followTrajectory(step4); // added by wade
+
 
 
 //        Chuckbot.setLiftPositionMidDeposit();
