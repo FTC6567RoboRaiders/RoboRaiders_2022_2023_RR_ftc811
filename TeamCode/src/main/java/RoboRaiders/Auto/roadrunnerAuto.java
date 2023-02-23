@@ -26,7 +26,7 @@ public class roadrunnerAuto extends LinearOpMode {
 
         Trajectory step1 = drive.trajectoryBuilder(startPose)
                 .addTemporalMarker(.75, () -> {
-                    //code in here, this is where we put the code to lift the lift.
+                    //After 3/4s of a second, have the lift go up
                     Chuckbot.setLiftPositionMid();
                     Chuckbot.setLiftRunWithEncodersSTP();
                     Chuckbot.setLiftMotorVelocity(3000.0);
@@ -36,7 +36,7 @@ public class roadrunnerAuto extends LinearOpMode {
                 .forward(22)
                 .splineTo(new Vector2d(-40,10), Math.toRadians(-136))
                 .addTemporalMarker(1.25, () -> {
-                    //code in here, this is where we put the code to lift the lift.
+                    //After 1.25 seconds rotate the turret to the back position
                     Chuckbot.setTurretPositionBack();
                     Chuckbot.turretRunWithEncodersSTP();
                     Chuckbot.setTurretMotorVelocity(110);
