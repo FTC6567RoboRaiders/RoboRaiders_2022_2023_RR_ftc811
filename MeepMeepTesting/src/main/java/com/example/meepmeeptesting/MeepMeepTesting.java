@@ -33,7 +33,7 @@ public class MeepMeepTesting {
                                 .splineTo(new Vector2d(-58, 15.25), Math.toRadians(-180))//Wade changed the cords, the were (-58, 13)
                                 .forward(4.7) //wade changed was 22
                                 .back(3)
-                                .splineTo(new Vector2d(-29, 5), -222)
+                                //.splineTo(new Vector2d(-29, 5), -200)
 //                                .back(10)
 //                                .splineTo(new Vector2d(-28,14), Math.toRadians(60))
 //                                .strafeTo(new Vector2d(-33,12))

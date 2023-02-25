@@ -32,19 +32,21 @@ public class RR_ChuckBot_LIT {
 
     /* Public Constants */
     public double turret_home = 0.0;
+    public double turret_coneStack = -30;
     public double turret_right = 94.5; // 1/4 of a turn
     public double turret_left = -94.5; // 1/4 of a turn
     public double turret_back = -192.0; // 1/2 of a turn was -185, -145, -135, -192, -220
+    public double turret_highBack = -175;
     public double turretFinalPosition;
 
     public double lift_ground = 150.0;
-    public double lift_high = 7550.0;
+    public double lift_high = 7850.0;
     public double lift_middle = 5950.0;
     public double lift_middle_deposit = 5000.0;
     public double lift_low = 3050.0;
     //wade made this grabage
     public double lift_stack5 = 1800.0;
-    public double lift_stack5_collect = 1350.0;
+    public double lift_stack5_collect = 1300.0;
 
     public static double robotHeading;
     public boolean firstTimeCalled = true;
@@ -191,6 +193,9 @@ public class RR_ChuckBot_LIT {
     }
 
     public void setTurretPositionHome() {setTurretMotorTargetPosition(turret_home);}
+    public void setTurretPositionConeStack() {setTurretMotorTargetPosition(turret_coneStack);}
+    public void setTurretPositionHighJunc() {setTurretMotorTargetPosition(turret_highBack);}
+
     public void setTurretPositionBack() {setTurretMotorTargetPosition(turret_back);}
     public void setTurretPositionRight() {setTurretMotorTargetPosition(turret_right);}
     public void setTurretPositionLeft() {setTurretMotorTargetPosition(turret_left);}
