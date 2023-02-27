@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import RoboRaiders.Pipelines.AprilTagDetectionPipeline;
 import RoboRaiders.Robot.RR_ChuckBot_LIT;
+
 import RoboRaiders.Teleop.TestBotTeleop;
 import RoboRaiders.Utilities.Logger.Logger;
 
@@ -50,6 +51,8 @@ public class roadrunnerAuto extends LinearOpMode {
     final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
 
     final int[] OUR_APRIL_TAGS = {0,1,2};
+
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -108,8 +111,8 @@ public class roadrunnerAuto extends LinearOpMode {
                 .lineTo(new Vector2d(-29.0,23.25))   //align to medium junction
                 .addTemporalMarker(3.25, () -> {
                     //code in here, this is where we put the code to lift the lift.
-                    while (Math.abs(Chuckbot.getTurretEncoderCounts() - (-192.0)) > 5.0) {  //wait for the turret to get to the right position
-                        telemetry.addData("turret encoder count: ", String.valueOf(Math.abs(Chuckbot.getTurretEncoderCounts() - (-192.0))));
+                    while (Math.abs(Chuckbot.getTurretEncoderCounts() - (-182.0)) > 5.0) {  //wait for the turret to get to the right position
+                        telemetry.addData("turret encoder count: ", String.valueOf(Math.abs(Chuckbot.getTurretEncoderCounts() - (-182.0))));
                         telemetry.update();
                     }
                     Chuckbot.setLiftPositionMidDeposit();
@@ -121,23 +124,30 @@ public class roadrunnerAuto extends LinearOpMode {
                 })
                 .build();
         Trajectory step3 = drive.trajectoryBuilder(step2.end())
-                .splineTo(new Vector2d(-58, 15.25), Math.toRadians(-180)) // Wade changed the cords, the were (-58, 13)
-                .forward(4.5) // this was in step 4 originally - drive to the cone stack
+                .forward(.00001)
                 .addTemporalMarker(.05, () -> {
                     Chuckbot.setTurretPositionConeStack();
                     Chuckbot.turretRunWithEncodersSTP();
                     Chuckbot.setTurretMotorVelocity(200);
                 })
-                .addTemporalMarker(.75, () -> {
-                    Chuckbot.setLiftPositionStack5Collect();
-                    Chuckbot.setLiftRunWithEncodersSTP();
-                    Chuckbot.setLiftMotorVelocity(3000.0);
-                })
 //                .addTemporalMarker(.6, () -> {
 //                    Chuckbot.setinTakeServoPosition(0.0);
 //                })
                 .build();
-        Trajectory step4 = drive.trajectoryBuilder(step3.end())  // get to the high junction
+
+        Trajectory step35 = drive.trajectoryBuilder(step3.end())
+                .addTemporalMarker(.01, () -> {
+                    Chuckbot.setLiftPositionStack5Collect(1500);
+                    Chuckbot.setLiftRunWithEncodersSTP();
+                    Chuckbot.setLiftMotorVelocity(3000.0);
+                })
+                .splineTo(new Vector2d(-58, 15.25), Math.toRadians(-180)) // Wade changed the cords, the were (-58, 13)
+                .forward(4.5) // this was in step 4 originally - drive to the cone stack
+                .build();
+
+
+
+        Trajectory step4 = drive.trajectoryBuilder(step35.end())  // get to the high junction
                 .back(2.5)
                 .splineTo(new Vector2d(-31, 7.5), Math.toRadians(-40))
                 .build();
@@ -155,7 +165,7 @@ public class roadrunnerAuto extends LinearOpMode {
 
 
         Trajectory step5 = drive.trajectoryBuilder(step4.end())   //Deposit cone, robot is at the high junction
-                .back(2) // was 1.5
+                .forward(0.5) // was 1.5
                 .addTemporalMarker(1.0, () -> {
                     Chuckbot.setTurretPositionHighJunc();
                     Chuckbot.turretRunWithEncodersSTP();
@@ -174,7 +184,7 @@ public class roadrunnerAuto extends LinearOpMode {
                 .build();
 
         Trajectory step6 = drive.trajectoryBuilder(step5.end())  // Start parking trajectory
-                .forward(11)
+                .forward(12)
                 .addTemporalMarker(1.0, () -> {
                     Chuckbot.setTurretPositionHome();
                     Chuckbot.turretRunWithEncodersSTP();
@@ -188,14 +198,18 @@ public class roadrunnerAuto extends LinearOpMode {
                 .back(24)
                 .build();
         Trajectory step8 = drive.trajectoryBuilder(parkPose)
-                .forward(21)
+                .forward(20)
                 .build();
 
         waitForStart();
         drive.followTrajectory(step1);
         drive.followTrajectory(step2);
         sleep(1000);
-        drive.followTrajectory(step3); // added by wade
+        drive.followTrajectory(step3);
+        sleep(250);
+        drive.followTrajectory(step35);
+        sleep(250);
+        Chuckbot.setLiftPositionStack5Collect(1300.0);// added by wade
         sleep(1000);
         Chuckbot.setinTakeServoPosition(0.0); // in take a cone
         sleep(1000);

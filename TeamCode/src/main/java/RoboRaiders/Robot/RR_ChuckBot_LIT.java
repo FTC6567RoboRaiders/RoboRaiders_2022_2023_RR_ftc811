@@ -35,7 +35,7 @@ public class RR_ChuckBot_LIT {
     public double turret_coneStack = -30;
     public double turret_right = 94.5; // 1/4 of a turn
     public double turret_left = -94.5; // 1/4 of a turn
-    public double turret_back = -192.0; // 1/2 of a turn was -185, -145, -135, -192, -220
+    public double turret_back = -182.0; // 1/2 of a turn was -185, -145, -135, -192, -220
     public double turret_highBack = -175;
     public double turretFinalPosition;
 
@@ -46,7 +46,7 @@ public class RR_ChuckBot_LIT {
     public double lift_low = 3050.0;
     //wade made this grabage
     public double lift_stack5 = 1800.0;
-    public double lift_stack5_collect = 1300.0;
+    public double lift_stack5_collect = 1300;
 
     public static double robotHeading;
     public boolean firstTimeCalled = true;
@@ -120,6 +120,7 @@ public class RR_ChuckBot_LIT {
         return COUNTS;
 
     }
+
 
     /**
      * Sets the target encoder value for the drive train motors
@@ -229,7 +230,7 @@ public class RR_ChuckBot_LIT {
     public void   setLiftPositionMidDeposit() {setLiftMotorTargetPosition(-lift_middle_deposit);}
     public void   setLiftPositionHigh() { setLiftMotorTargetPosition(-lift_high); }
     public void   setLiftPositionStack5() { setLiftMotorTargetPosition(-lift_stack5); }
-    public void   setLiftPositionStack5Collect() { setLiftMotorTargetPosition(-lift_stack5_collect); }
+    public void   setLiftPositionStack5Collect(double liftHeight) { setLiftMotorTargetPosition(-liftHeight); }
 
     public double getLiftEncoderCounts() { return liftMotor.getCurrentPosition(); }
 
