@@ -55,10 +55,11 @@ public class MeepMeepTesting {
 //                                .splineTo(new Vector2d(-41, 10), Math.toRadians(180))
 //                                .splineToConstantHeading(new Vector2d(-58, 13), Math.toRadians(0))
                                 .strafeRight(3)
-                                .forward(28)
+                                .lineTo(new Vector2d(-36, 36))
                                 .turn(Math.toRadians(-90))
-                                .forward(20)
-                                .lineToSplineHeading(new Pose2d(-36,35,Math.toRadians(-90)))
+                                .lineTo(new Vector2d(-48, 36))
+                                .back(12)
+                                .turn(Math.toRadians(90))
                                 .build()
                 );
 

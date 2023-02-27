@@ -270,29 +270,36 @@ public class DectectATAndParkLO extends LinearOpMode {
                         .strafeRight(3)
                         .build();
                 Trajectory step2 = drive.trajectoryBuilder(step1.end())
-                        .lineTo(new Vector2d(-33, 35), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        .lineTo(new Vector2d(-36, 36), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                 SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 //                        .splineTo(new Vector2d(-35,44), Math.toRadians(-135))
 //                        .splineTo(new Vector2d(-36.5, 47), Math.toRadians(-90))
                         .build();
 
                 Trajectory step3 = drive.trajectoryBuilder(pose2)
-                        .lineTo(new Vector2d(-33, 35), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        .lineTo(new Vector2d(-48, 36), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                 SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                         .build();
-                Trajectory step4 = drive.trajectoryBuilder(step3.end())
-                        .lineToSplineHeading(new Pose2d(-36,35,Math.toRadians(-90)))
+                Trajectory step54 = drive.trajectoryBuilder(step3.end())
+
+                        .back(12)
+                        .build();
+                Trajectory step5 = drive.trajectoryBuilder(step3.end())
+
+                        .back(12)
                         .build();
 
                 telemetry.addData("Status: ", "case 1");
                 drive.followTrajectory(step1);
                 drive.followTrajectory(step2);
-                drive.turn(Math.toRadians(-45));
+                drive.turn(Math.toRadians(-90));
 
                 drive.setPoseEstimate(pose2);
                 drive.followTrajectory(step3);
-                drive.followTrajectory(step4);
-                drive.turn(Math.toRadians(45));
+
+                drive.followTrajectory(step5);
+                drive.turn(Math.toRadians(90));
+
                 break;
 
            // case 1:
