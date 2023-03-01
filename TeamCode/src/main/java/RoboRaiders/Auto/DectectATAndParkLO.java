@@ -257,11 +257,12 @@ public class DectectATAndParkLO extends LinearOpMode {
             case 0:
                 Pose2d startPose = new Pose2d(-33, 63, Math.toRadians(-90));
                 Pose2d pose2 = new Pose2d(-39, 54,Math.toRadians(-135));
+                // x-36 y36 resulted in robot moving diagonally towards floor junction instead of low junction
 
 
                 drive.setPoseEstimate(startPose);
 
-                Trajectory step1 = drive.trajectoryBuilder(startPose)
+                Trajectory step1A = drive.trajectoryBuilder(startPose)
                         .addTemporalMarker(0.5, () -> {
                             Chuckbot.setLiftPositionMid();
                             Chuckbot.setLiftRunWithEncodersSTP();
@@ -269,35 +270,33 @@ public class DectectATAndParkLO extends LinearOpMode {
                         })
                         .strafeRight(3)
                         .build();
-                Trajectory step2 = drive.trajectoryBuilder(step1.end())
+                Trajectory step2A = drive.trajectoryBuilder(step1A.end())
                         .lineTo(new Vector2d(-36, 36), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                 SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 //                        .splineTo(new Vector2d(-35,44), Math.toRadians(-135))
 //                        .splineTo(new Vector2d(-36.5, 47), Math.toRadians(-90))
                         .build();
 
-                Trajectory step3 = drive.trajectoryBuilder(pose2)
-                        .lineTo(new Vector2d(-48, 36), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                Trajectory step3A = drive.trajectoryBuilder(pose2)
+                        .lineTo(new Vector2d(-48, 39), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                 SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                         .build();
-                Trajectory step54 = drive.trajectoryBuilder(step3.end())
-
-                        .back(12)
+                Trajectory step4A = drive.trajectoryBuilder(step3A.end())
+                        .strafeRight(5)
                         .build();
-                Trajectory step5 = drive.trajectoryBuilder(step3.end())
-
-                        .back(12)
+                Trajectory step5A = drive.trajectoryBuilder(step4A.end())
+                        .back(15)
                         .build();
 
                 telemetry.addData("Status: ", "case 1");
-                drive.followTrajectory(step1);
-                drive.followTrajectory(step2);
+                drive.followTrajectory(step1A);
+                drive.followTrajectory(step2A);
                 drive.turn(Math.toRadians(-90));
 
                 drive.setPoseEstimate(pose2);
-                drive.followTrajectory(step3);
-
-                drive.followTrajectory(step5);
+                drive.followTrajectory(step3A);
+                drive.followTrajectory(step4A);
+                drive.followTrajectory(step5A);
                 drive.turn(Math.toRadians(90));
 
                 break;

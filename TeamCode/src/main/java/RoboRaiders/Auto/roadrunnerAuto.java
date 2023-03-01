@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -85,10 +86,38 @@ public class roadrunnerAuto extends LinearOpMode {
         }
 
 
-        Pose2d startPose = new Pose2d(-33, 63, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-33, 39, Math.toRadians(-90));
         Pose2d parkPose = new Pose2d(-35.8,14,Math.toRadians(0));
-        drive.setPoseEstimate(startPose);
 
+        Pose2d approachPose = new Pose2d(-33, 63, Math.toRadians(-90));
+        Pose2d pose2 = new Pose2d(-39, 54,Math.toRadians(-135));
+
+        drive.setPoseEstimate(approachPose);
+        Trajectory step1A = drive.trajectoryBuilder(startPose)
+                .addTemporalMarker(0.5, () -> {
+                    Chuckbot.setLiftPositionMid();
+                    Chuckbot.setLiftRunWithEncodersSTP();
+                    Chuckbot.setLiftMotorVelocity(3000.0);
+                })
+                .strafeRight(3)
+                .build();
+        Trajectory step2A = drive.trajectoryBuilder(step1A.end())
+                .lineTo(new Vector2d(-36, 36), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+//                        .splineTo(new Vector2d(-35,44), Math.toRadians(-135))
+//                        .splineTo(new Vector2d(-36.5, 47), Math.toRadians(-90))
+                .build();
+
+        Trajectory step3A = drive.trajectoryBuilder(pose2)
+                .lineTo(new Vector2d(-48, 39), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+        Trajectory step4A = drive.trajectoryBuilder(step3A.end())
+                .strafeRight(5)
+                .build();
+        Trajectory step5A = drive.trajectoryBuilder(step4A.end())
+                .back(15)
+                .build();
         Trajectory step1 = drive.trajectoryBuilder(startPose)
                 .addTemporalMarker(.75, () -> {
                     //After 3/4s of a second, have the lift go up
@@ -162,7 +191,7 @@ public class roadrunnerAuto extends LinearOpMode {
 //                .addTemporalMarker(.1, () -> {
 
    //             })
-
+// code gods, make the robot do 6 cone pickup auto :)
 
         Trajectory step5 = drive.trajectoryBuilder(step4.end())   //Deposit cone, robot is at the high junction
                 .forward(0.5) // was 1.5
@@ -202,6 +231,16 @@ public class roadrunnerAuto extends LinearOpMode {
                 .build();
 
         waitForStart();
+        drive.followTrajectory(step1A);
+        drive.followTrajectory(step2A);
+        drive.turn(Math.toRadians(-90));
+
+        drive.setPoseEstimate(pose2);
+        drive.followTrajectory(step3A);
+        drive.followTrajectory(step4A);
+        drive.followTrajectory(step5A);
+        drive.turn(Math.toRadians(90));
+        drive.setPoseEstimate(startPose);
         drive.followTrajectory(step1);
         drive.followTrajectory(step2);
         sleep(1000);
