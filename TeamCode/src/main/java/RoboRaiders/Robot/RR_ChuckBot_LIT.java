@@ -35,8 +35,9 @@ public class RR_ChuckBot_LIT {
     public double turret_coneStack = -30;
     public double turret_right = 94.5; // 1/4 of a turn
     public double turret_left = -94.5; // 1/4 of a turn
-    public double turret_back = -182.0; // 1/2 of a turn was -185, -145, -135, -192, -220
+    public double turret_back = -200.0; // 1/2 of a turn was -185, -145, -135, -192, -220
     public double turret_highBack = -175;
+    public double turret_stack = -20;
     public double turretFinalPosition;
 
     public double lift_ground = 150.0;
@@ -195,6 +196,7 @@ public class RR_ChuckBot_LIT {
 
     public void setTurretPositionHome() {setTurretMotorTargetPosition(turret_home);}
     public void setTurretPositionConeStack() {setTurretMotorTargetPosition(turret_coneStack);}
+    public void setTurretPositionTrustStack() {setTurretMotorTargetPosition(turret_stack);}
     public void setTurretPositionHighJunc() {setTurretMotorTargetPosition(turret_highBack);}
 
     public void setTurretPositionBack() {setTurretMotorTargetPosition(turret_back);}

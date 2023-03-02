@@ -23,7 +23,7 @@ import RoboRaiders.Teleop.TestBotTeleop;
 import RoboRaiders.Utilities.Logger.Logger;
 
 @Autonomous
-public class roadrunnerAuto extends LinearOpMode {
+public class autoRed extends LinearOpMode {
 
     OpenCvCamera camera;
     int cameraMonitorViewId;
@@ -131,17 +131,17 @@ public class roadrunnerAuto extends LinearOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(1.25, () -> {
                     //After 1.25 seconds rotate the turret to the back position
-                    Chuckbot.setTurretPositionBack();
+                    Chuckbot.setTurretMotorTargetPosition(210.0);
                     Chuckbot.turretRunWithEncodersSTP();
                     Chuckbot.setTurretMotorVelocity(110);
                 })
                 .build();
         Trajectory step2 = drive.trajectoryBuilder(step1.end())
-                .back(19)   //align to medium junction // was y21.0 // was y20.5 // x-26 y22 // x-28 y22
+                .back(24)   //align to medium junction // was y21.0 // was y20.5 // x-26 y22 // x-28 y22
                 .addTemporalMarker(3.25, () -> {
                     //code in here, this is where we put the code to lift the lift.
-                    while (Math.abs(Chuckbot.getTurretEncoderCounts() - (-200.0)) > 5.0) {  //wait for the turret to get to the right position
-                        telemetry.addData("turret encoder count: ", String.valueOf(Math.abs(Chuckbot.getTurretEncoderCounts() - (-200.0))));
+                    while (Math.abs(Chuckbot.getTurretEncoderCounts() - (-210.0)) > 5.0) {  //wait for the turret to get to the right position
+                        telemetry.addData("turret encoder count: ", String.valueOf(Math.abs(Chuckbot.getTurretEncoderCounts() - (-210.0))));
                         telemetry.update();
                     }
                     Chuckbot.setLiftPositionMidDeposit();
@@ -196,7 +196,7 @@ public class roadrunnerAuto extends LinearOpMode {
 //                })
 //                .addTemporalMarker(.1, () -> {
 
-   //             })
+        //             })
 // code gods, make the robot do 6 cone pickup auto :)
 
         Trajectory step5 = drive.trajectoryBuilder(step4.end())   // Deposit cone, robot is at the high junction

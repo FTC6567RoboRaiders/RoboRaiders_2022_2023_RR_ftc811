@@ -60,6 +60,18 @@ public class MeepMeepTesting {
                                 .lineTo(new Vector2d(-48, 36))
                                 .back(12)
                                 .turn(Math.toRadians(90))
+                                .forward(21.75)
+                                .splineTo(new Vector2d(-40,10), Math.toRadians(-136))
+                                .lineTo(new Vector2d(-26.0,21.0))
+                                .forward(.00001)
+                                .splineTo(new Vector2d(-65, 13), Math.toRadians(-180)) // Wade changed the cords, the were (-58, 13)
+                                .forward(4.5)
+                                .back(2.5)
+                                .splineTo(new Vector2d(-31, 7.5), Math.toRadians(-40))
+                                .forward(0.5)
+                                .forward(12)
+                                .turn(Math.toRadians(40))
+
                                 .build()
                 );
 
