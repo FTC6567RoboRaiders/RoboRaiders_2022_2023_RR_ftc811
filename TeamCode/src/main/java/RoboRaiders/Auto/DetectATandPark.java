@@ -138,29 +138,7 @@ public class DetectATandPark extends OpMode
                 switch (aprilTagId) {
                     case 0:
                         //move left, then forward
-                        telemetry.addData("Status", "Case 1");
-                        state = State.PARKED;
 
-//                        numofticks =  bill.driveTrainCalculateCounts(15);
-//                        telemetry.addData("numofticks: ", numofticks);
-//                        bill.setDriveMotorPower(0.5, -0.5, -0.5, 0.5);
-//                        while (opModeIsActive() && bill.getSortedEncoderCount() <= numofticks){
-//                            telemetry.addData("getSortEncoderCount()", bill.getSortedEncoderCount());
-//                        }
-//                        telemetry.update();
-//                        bill.setDriveMotorPower(0.0, 0.0, 0.0, 0.0);
-//                        sleep(500)
-//                        numofticks = bill.driveTrainCalculateCounts(30);
-//                        telemetry.addData("numofticks: ", numofticks);
-//
-//                        bill.setDriveMotorPower(0.5, 0.5, 0.5, 0.5);
-//
-//                        while (opModeIsActive() && bill.getSortedEncoderCount() <= numofticks){
-//                            telemetry.addData("getSortEncoderCount()", bill.getSortedEncoderCount());
-//                        }
-//                        telemetry.update();
-//                        bill.setDriveMotorPower(0.0, 0.0, 0.0, 0.0);
-//                        break;
                         break;
 
 
@@ -178,31 +156,9 @@ public class DetectATandPark extends OpMode
                         break;
 
                     case 2:
-                        //move right then forward
-                        myLogger.Debug("loop() - Case 3");
-                        telemetry.addData("Status", "Case 3");
-                        state = State.PARKED;     // Once code is added to power the motors, then state should be set to ON_THE_MOVE
+
+
                         break;
-//                        numofticks =  bill.driveTrainCalculateCounts(15);
-//                        telemetry.addData("numofticks: ", numofticks);
-//                        bill.setDriveMotorPower(0.5, -0.5, -0.5, 0.5);
-//                        while (opModeIsActive() && bill.getSortedEncoderCount() <= numofticks){
-//                            telemetry.addData("getSortEncoderCount()", bill.getSortedEncoderCount());
-//                        }
-//                        telemetry.update();
-//                        bill.setDriveMotorPower(0.0, 0.0, 0.0, 0.0);
-//                        sleep(500)
-//                        numofticks = bill.driveTrainCalculateCounts(30);
-//                        telemetry.addData("numofticks: ", numofticks);
-//
-//                        bill.setDriveMotorPower(0.5, 0.5, 0.5, 0.5);
-//
-//                        while (opModeIsActive() && bill.getSortedEncoderCount() <= numofticks){
-//                            telemetry.addData("getSortEncoderCount()", bill.getSortedEncoderCount());
-//                        }
-//                        telemetry.update();
-//                        bill.setDriveMotorPower(0.0, 0.0, 0.0, 0.0);
-//                        break;
                     default:
                         myLogger.Debug("loop() - default");
                         telemetry.addData("No April Tag Found Parking In Default Location", aprilTagId);

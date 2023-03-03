@@ -99,9 +99,9 @@ public class autoRed extends LinearOpMode {
                     Chuckbot.setLiftRunWithEncodersSTP();
                     Chuckbot.setLiftMotorVelocity(3000.0);
                 })
-
                 .strafeRight(3)
                 .build();
+
         Trajectory step2A = drive.trajectoryBuilder(step1A.end())
                 .lineTo(new Vector2d(-36, 36), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
@@ -113,12 +113,15 @@ public class autoRed extends LinearOpMode {
                 .lineTo(new Vector2d(-48, 39), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), // was x-48 // was x-
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
+
         Trajectory step4A = drive.trajectoryBuilder(step3A.end())
                 .strafeRight(3)
                 .build();
+
         Trajectory step5A = drive.trajectoryBuilder(step4A.end())
                 .back(15) // was back15
                 .build();
+
         Trajectory step1 = drive.trajectoryBuilder(startPose)
                 .addTemporalMarker(.75, () -> {
                     //After 3/4s of a second, have the lift go up
@@ -131,27 +134,29 @@ public class autoRed extends LinearOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(1.25, () -> {
                     //After 1.25 seconds rotate the turret to the back position
-                    Chuckbot.setTurretMotorTargetPosition(210.0);
+                    Chuckbot.setTurretMotorTargetPosition(-180.0);
                     Chuckbot.turretRunWithEncodersSTP();
                     Chuckbot.setTurretMotorVelocity(110);
                 })
                 .build();
+
         Trajectory step2 = drive.trajectoryBuilder(step1.end())
-                .back(24)   //align to medium junction // was y21.0 // was y20.5 // x-26 y22 // x-28 y22
+                .back(21.5)   //align to medium junction // was y21.0 // was y20.5 // x-26 y22 // x-28 y22 // 24
                 .addTemporalMarker(3.25, () -> {
                     //code in here, this is where we put the code to lift the lift.
-                    while (Math.abs(Chuckbot.getTurretEncoderCounts() - (-210.0)) > 5.0) {  //wait for the turret to get to the right position
-                        telemetry.addData("turret encoder count: ", String.valueOf(Math.abs(Chuckbot.getTurretEncoderCounts() - (-210.0))));
+                    while (Math.abs(Chuckbot.getTurretEncoderCounts() - (-180.0)) > 5.0) {  //wait for the turret to get to the right position
+                        telemetry.addData("turret encoder count: ", String.valueOf(Math.abs(Chuckbot.getTurretEncoderCounts() - (-180.0))));
                         telemetry.update();
                     }
                     Chuckbot.setLiftPositionMidDeposit();
                     Chuckbot.setLiftRunWithEncodersSTP();
-                    Chuckbot.setLiftMotorVelocity(1500.0);
+                    Chuckbot.setLiftMotorVelocity(3000.0);
                 })
                 .addTemporalMarker(4.0, () -> {
                     Chuckbot.setinTakeServoPosition(1.0);  //Deposit cone
                 })
                 .build();
+
         Trajectory step3 = drive.trajectoryBuilder(step2.end())
                 .forward(.00001)
                 .addTemporalMarker(.05, () -> {
@@ -176,15 +181,14 @@ public class autoRed extends LinearOpMode {
                     Chuckbot.setLiftRunWithEncodersSTP();
                     Chuckbot.setLiftMotorVelocity(3000.0);
                 })
-                .splineTo(new Vector2d(-59, 13.5), Math.toRadians(-180)) // Wade changed the cords, the were (-58, 13)
+                .splineTo(new Vector2d(-59, 16), Math.toRadians(-180)) // Wade changed the cords, the were (-58, 13) // -59 13.5
                 // this was in step 4 originally - drive to the cone stack
                 .build();
 
-
-
         Trajectory step4 = drive.trajectoryBuilder(step35.end())  // get to the high junction
                 .back(2.5)
-                .splineTo(new Vector2d(-29.0, 8.0), Math.toRadians(-40))
+                .splineTo(new Vector2d(-30.0, 9.5), Math.toRadians(-40))
+                .back(1)
                 .build();
 //                .addTemporalMarker(.05, () -> {
 //                    while( Math.abs(Chuckbot.getTurretEncoderCounts() - Chuckbot.lift_stack5_collect) > 5.0 ) {
@@ -219,7 +223,7 @@ public class autoRed extends LinearOpMode {
                 .build();
 
         Trajectory step6 = drive.trajectoryBuilder(step5.end())  // Start parking trajectory
-                .forward(10)
+                .forward(8)
                 .addTemporalMarker(1.0, () -> {
                     Chuckbot.setTurretPositionHome();
                     Chuckbot.turretRunWithEncodersSTP();
@@ -232,9 +236,12 @@ public class autoRed extends LinearOpMode {
                     Chuckbot.setLiftMotorVelocity(3000.0);
                 })
                 .build();
+
+
         Trajectory step7 = drive.trajectoryBuilder(parkPose)
-                .back(24.5)
+                .back(26)
                 .build();
+
         Trajectory step8 = drive.trajectoryBuilder(parkPose)
                 .forward(24.5)
                 .build();

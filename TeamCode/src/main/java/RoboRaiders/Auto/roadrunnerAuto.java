@@ -233,10 +233,10 @@ public class roadrunnerAuto extends LinearOpMode {
                 })
                 .build();
         Trajectory step7 = drive.trajectoryBuilder(parkPose)
-                .back(24.5)
+                .strafeRight(24.5)
                 .build();
         Trajectory step8 = drive.trajectoryBuilder(parkPose)
-                .forward(24.5)
+                .strafeLeft(26)
                 .build();
 
         waitForStart();
@@ -268,7 +268,7 @@ public class roadrunnerAuto extends LinearOpMode {
         drive.followTrajectory(step5);
         sleep(1000);
         drive.followTrajectory(step6);
-        drive.turn(Math.toRadians(40));
+        drive.turn(Math.toRadians(130));
         sleep(500);
 
         drive.setPoseEstimate(parkPose);
