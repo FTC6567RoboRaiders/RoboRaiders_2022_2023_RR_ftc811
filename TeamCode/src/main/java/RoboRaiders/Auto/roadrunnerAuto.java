@@ -200,7 +200,7 @@ public class roadrunnerAuto extends LinearOpMode {
 // code gods, make the robot do 6 cone pickup auto :)
 
         Trajectory step5 = drive.trajectoryBuilder(step4.end())   // Deposit cone, robot is at the high junction
-                .back(0.7) // was 1.5
+                .back(0.4) // was 1.5
                 .addTemporalMarker(1.0, () -> {
                     Chuckbot.setTurretPositionHighJunc();
                     Chuckbot.turretRunWithEncodersSTP();
@@ -219,7 +219,7 @@ public class roadrunnerAuto extends LinearOpMode {
                 .build();
 
         Trajectory step6 = drive.trajectoryBuilder(step5.end())  // Start parking trajectory
-                .forward(10)
+                .forward(11)
                 .addTemporalMarker(1.0, () -> {
                     Chuckbot.setTurretPositionHome();
                     Chuckbot.turretRunWithEncodersSTP();
@@ -233,10 +233,10 @@ public class roadrunnerAuto extends LinearOpMode {
                 })
                 .build();
         Trajectory step7 = drive.trajectoryBuilder(parkPose)
-                .strafeRight(24.5)
+                .strafeLeft(24.5)
                 .build();
         Trajectory step8 = drive.trajectoryBuilder(parkPose)
-                .strafeLeft(26)
+                .strafeRight(26)
                 .build();
 
         waitForStart();

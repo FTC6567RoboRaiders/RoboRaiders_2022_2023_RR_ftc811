@@ -23,9 +23,9 @@ public class TestRobot {
     public DcMotorEx rFMotor = null;
     public DcMotorEx lRMotor = null;
     public DcMotorEx rRMotor = null;
-    public DcMotorEx turretMotor = null;
-    public DcMotorEx liftMotor = null;
-    private Servo inTake;
+//    public DcMotorEx turretMotor = null;
+//    public DcMotorEx liftMotor = null;
+//    private Servo inTake;
     public BNO055IMU imu;
 
     /* Local OpMode Members */
@@ -66,9 +66,9 @@ public class TestRobot {
         lRMotor = hwMap.get(DcMotorEx.class, "lRMotor");
         rRMotor = hwMap.get(DcMotorEx.class, "rRMotor");
 
-        turretMotor = hwMap.get(DcMotorEx.class, "turretMotor");
-
-        liftMotor = hwMap.get(DcMotorEx.class, "liftMotor");
+//        turretMotor = hwMap.get(DcMotorEx.class, "turretMotor");
+//
+//        liftMotor = hwMap.get(DcMotorEx.class, "liftMotor");
 
 
         // Defines the directions the motors will spin
@@ -77,18 +77,18 @@ public class TestRobot {
         lRMotor.setDirection(DcMotor.Direction.REVERSE);
         rRMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        turretMotor.setDirection(DcMotor.Direction.FORWARD);
-
-        liftMotor.setDirection(DcMotor.Direction.FORWARD);
+//        turretMotor.setDirection(DcMotor.Direction.FORWARD);
+//
+//        liftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         lFMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rFMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //have the motors on the drivetrain break here.
         // Set all motors to zero power
@@ -97,15 +97,15 @@ public class TestRobot {
         rRMotor.setPower(0.0);
         lRMotor.setPower(0.0);
 
-        turretMotor.setPower(0.0);
-
-        liftMotor.setPower(0.0);
+//        turretMotor.setPower(0.0);
+//
+//        liftMotor.setPower(0.0);
 
 
         // Stop and reset encoders
         resetEncoders();
-        turretResetEncoders();
-        liftResetEncoders();
+//        turretResetEncoders();
+//        liftResetEncoders();
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODER if encoders are installed, and we wouldn't use encoders for teleop, even if we
@@ -114,13 +114,13 @@ public class TestRobot {
         lRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//
+//        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // define and initialize the servo
-        inTake = hwMap.get(Servo.class, "inTakeServo");
-        setinTakeServoPosition(0.5); // set to home position
+//        inTake = hwMap.get(Servo.class, "inTakeServo");
+//        setinTakeServoPosition(0.5); // set to home position
 
         // Define and initialize sensors
         imu = hwMap.get(BNO055IMU.class, "imu");
@@ -345,110 +345,110 @@ public class TestRobot {
      * Sets the target encoder value for the drive train motors
      * @param encoderPosition
      */
-    public void setTurretMotorTargetPosition(double encoderPosition) {
-
-        turretMotor.setTargetPosition((int)encoderPosition);
-
-    }
+//    public void setTurretMotorTargetPosition(double encoderPosition) {
+////
+////        turretMotor.setTargetPosition((int)encoderPosition);
+//
+//    }
 
     /**
      * This method will set the mode of all of the drive train motors to run using encoder
      */
-    public void turretRunWithEncoders() {
-
-        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-    }
+//    public void turretRunWithEncoders() {
+//
+//        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//    }
 
     /**
      * This method will set the mode all of the drive train motors to RUN_TO_POSITION
      */
-    public void turretRunWithEncodersSTP() {
-
-        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-    }
+//    public void turretRunWithEncodersSTP() {
+//
+//        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//    }
 
     /**
      * This method will set the mode of all of the drive train motors to run without encoder
      */
-    public void turretRunWithoutEncoders() {
-
-        turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-    }
+//    public void turretRunWithoutEncoders() {
+//
+//        turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//
+//    }
 
     /**
      * This will set the mode of the drive train motors to STOP_AND_RESET_ENCODER, which will zero
      * the encoder count but also set the motors into a RUN_WITHOUT_ENCODER mode
      */
-    public void turretResetEncoders() {
+//    public void turretResetEncoders() {
+//
+//        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//    }
 
-        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-    }
-
-    public void turretSetMotorTargetPosition(int encoderPosition) {
-
-        turretMotor.setTargetPosition(encoderPosition);
-
-    }
-    public void setTurretMotorPower(double turretMotorPower) {
-
-        turretMotor.setPower(turretMotorPower);
-
-    }
-    public void setTurretMotorVelocity(double ticsPerSecond) {
-
-        turretMotor.setVelocity(ticsPerSecond);
-
-    }
+//    public void turretSetMotorTargetPosition(int encoderPosition) {
+//
+//        turretMotor.setTargetPosition(encoderPosition);
+//
+//    }
+//    public void setTurretMotorPower(double turretMotorPower) {
+//
+//        turretMotor.setPower(turretMotorPower);
+//
+//    }
+//    public void setTurretMotorVelocity(double ticsPerSecond) {
+//
+//        turretMotor.setVelocity(ticsPerSecond);
+//
+//    }
 
     /**
      * These methods will get individual encoder position from any of the drive train motors
      * @return the encoder position
      */
-    public double getTurretEncoderCounts() {
-
-        return turretMotor.getCurrentPosition();
-
-    }
-
-    public void liftResetEncoders() {
-
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-    }
-
-    public void setLiftPower(double liftPower) {
-
-        liftMotor.setPower(liftPower);
-
-    }
-    public void setLiftMotorTargetPosition(double liftPosition){
-        liftMotor.setTargetPosition((int)liftPosition);
-    }
-    public void setLiftMotorVelocity(double liftVelocity){
-        liftMotor.setVelocity(liftVelocity);
-
-    }
-
-    public double getLiftEncoderCounts(){
-        return liftMotor.getCurrentPosition();
-    }
-    public void liftRunWithEncodersSTP(){
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-    public void liftRunWithEncoders(){
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-    public void liftRunWithoutEncoders(){
-        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-    public void setLiftMotorPower(double liftPower){
-        liftMotor.setPower(liftPower);
-    }
-    public double getLiftMotorPower() { return liftMotor.getPower(); }
+//    public double getTurretEncoderCounts() {
+//
+//        return turretMotor.getCurrentPosition();
+//
+//    }
+//
+//    public void liftResetEncoders() {
+//
+//        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//    }
+//
+//    public void setLiftPower(double liftPower) {
+//
+//        liftMotor.setPower(liftPower);
+//
+//    }
+//    public void setLiftMotorTargetPosition(double liftPosition){
+//        liftMotor.setTargetPosition((int)liftPosition);
+//    }
+//    public void setLiftMotorVelocity(double liftVelocity){
+//        liftMotor.setVelocity(liftVelocity);
+//
+//    }
+//
+//    public double getLiftEncoderCounts(){
+//        return liftMotor.getCurrentPosition();
+//    }
+//    public void liftRunWithEncodersSTP(){
+//        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//    }
+//    public void liftRunWithEncoders(){
+//        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//    }
+//    public void liftRunWithoutEncoders(){
+//        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//    }
+//    public void setLiftMotorPower(double liftPower){
+//        liftMotor.setPower(liftPower);
+//    }
+//    public double getLiftMotorPower() { return liftMotor.getPower(); }
 
     //**********************************************************************************************
     //
@@ -471,9 +471,9 @@ public class TestRobot {
      *                      - 1.0 scoring position
      *
      */
-    public void setinTakeServoPosition(double servoPosition){
-        inTake.setPosition(servoPosition);
-    }
+//    public void setinTakeServoPosition(double servoPosition){
+//        inTake.setPosition(servoPosition);
+//    }
 
 
     //**********************************************************************************************

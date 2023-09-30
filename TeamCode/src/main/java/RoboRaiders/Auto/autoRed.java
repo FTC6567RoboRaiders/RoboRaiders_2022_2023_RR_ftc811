@@ -88,7 +88,7 @@ public class autoRed extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(-33, 39, Math.toRadians(-90));
         Pose2d parkPose = new Pose2d(-35.8,14,Math.toRadians(0));
-
+        Pose2d pose3 = new Pose2d(-36,36, Math.toRadians(-136));
         Pose2d approachPose = new Pose2d(-33, 63, Math.toRadians(-90));
         Pose2d pose2 = new Pose2d(-39, 54,Math.toRadians(-135));
 
@@ -129,23 +129,23 @@ public class autoRed extends LinearOpMode {
                     Chuckbot.setLiftRunWithEncodersSTP();
                     Chuckbot.setLiftMotorVelocity(3000.0);
                 })
-                .forward(21.75)
-                .splineTo(new Vector2d(-39,9), Math.toRadians(-136), SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .forward(20.0)
+//                .splineTo(new Vector2d(-38,10), Math.toRadians(-136), SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(1.25, () -> {
                     //After 1.25 seconds rotate the turret to the back position
-                    Chuckbot.setTurretMotorTargetPosition(-180.0);
+                    Chuckbot.setTurretMotorTargetPosition(-175.0);
                     Chuckbot.turretRunWithEncodersSTP();
                     Chuckbot.setTurretMotorVelocity(110);
                 })
                 .build();
 
-        Trajectory step2 = drive.trajectoryBuilder(step1.end())
-                .back(21.5)   //align to medium junction // was y21.0 // was y20.5 // x-26 y22 // x-28 y22 // 24
+        Trajectory step2 = drive.trajectoryBuilder(pose3)
+                .back(9.75)   //align to medium junction // was y21.0 // was y20.5 // x-26 y22 // x-28 y22 // 24
                 .addTemporalMarker(3.25, () -> {
                     //code in here, this is where we put the code to lift the lift.
-                    while (Math.abs(Chuckbot.getTurretEncoderCounts() - (-180.0)) > 5.0) {  //wait for the turret to get to the right position
-                        telemetry.addData("turret encoder count: ", String.valueOf(Math.abs(Chuckbot.getTurretEncoderCounts() - (-180.0))));
+                    while (Math.abs(Chuckbot.getTurretEncoderCounts() - (-175)) > 5.0) {  //wait for the turret to get to the right position
+                        telemetry.addData("turret encoder count: ", String.valueOf(Math.abs(Chuckbot.getTurretEncoderCounts() - (-175.0))));
                         telemetry.update();
                     }
                     Chuckbot.setLiftPositionMidDeposit();
@@ -187,7 +187,7 @@ public class autoRed extends LinearOpMode {
 
         Trajectory step4 = drive.trajectoryBuilder(step35.end())  // get to the high junction
                 .back(2.5)
-                .splineTo(new Vector2d(-30.0, 9.5), Math.toRadians(-40))
+                .splineTo(new Vector2d(-29.0, 8.5), Math.toRadians(-30))
                 .back(1)
                 .build();
 //                .addTemporalMarker(.05, () -> {
@@ -204,7 +204,7 @@ public class autoRed extends LinearOpMode {
 // code gods, make the robot do 6 cone pickup auto :)
 
         Trajectory step5 = drive.trajectoryBuilder(step4.end())   // Deposit cone, robot is at the high junction
-                .back(0.7) // was 1.5
+                .back(0.4) // was 1.5
                 .addTemporalMarker(1.0, () -> {
                     Chuckbot.setTurretPositionHighJunc();
                     Chuckbot.turretRunWithEncodersSTP();
@@ -222,8 +222,8 @@ public class autoRed extends LinearOpMode {
                 })
                 .build();
 
-        Trajectory step6 = drive.trajectoryBuilder(step5.end())  // Start parking trajectory
-                .forward(8)
+        Trajectory step6 = drive.trajectoryBuilder(step2.end())  // Start parking trajectory
+                .forward(12.0)
                 .addTemporalMarker(1.0, () -> {
                     Chuckbot.setTurretPositionHome();
                     Chuckbot.turretRunWithEncodersSTP();
@@ -236,14 +236,17 @@ public class autoRed extends LinearOpMode {
                     Chuckbot.setLiftMotorVelocity(3000.0);
                 })
                 .build();
-
-
-        Trajectory step7 = drive.trajectoryBuilder(parkPose)
-                .back(26)
+        Trajectory stepAd = drive.trajectoryBuilder(parkPose)
+                .strafeLeft(2)
                 .build();
 
-        Trajectory step8 = drive.trajectoryBuilder(parkPose)
-                .forward(24.5)
+
+        Trajectory step7 = drive.trajectoryBuilder(stepAd.end())
+                .strafeLeft(23.5)
+                .build();
+
+        Trajectory step8 = drive.trajectoryBuilder(stepAd.end())
+                .strafeRight(21.0)
                 .build();
 
         waitForStart();
@@ -258,28 +261,31 @@ public class autoRed extends LinearOpMode {
         drive.turn(Math.toRadians(90));
         drive.setPoseEstimate(startPose);
         drive.followTrajectory(step1);
+        drive.turn(Math.toRadians(-46));
+        drive.setPoseEstimate(pose3);
         drive.followTrajectory(step2);
         sleep(1000);
-        drive.followTrajectory(step3);
-        drive.followTrajectory(step35);
-        sleep(250);
-        Chuckbot.setLiftPositionStack5Collect(1300.0);// added by wade
-        sleep(1000);
-        Chuckbot.setinTakeServoPosition(0.0); // in take a cone
-        sleep(1000);
-        Chuckbot.setLiftPositionHigh();
-        Chuckbot.setLiftRunWithEncodersSTP();
-        Chuckbot.setLiftMotorVelocity(4000.0);
-        sleep(250);
-        drive.followTrajectory(step4);
-        drive.followTrajectory(step5);
-        sleep(1000);
+        //drive.followTrajectory(step3);
+//        drive.followTrajectory(step35);
+//        sleep(250);
+//        Chuckbot.setLiftPositionStack5Collect(1300.0);// added by wade
+//        sleep(1000);
+//        Chuckbot.setinTakeServoPosition(0.0); // in take a cone
+//        sleep(1000);
+//        Chuckbot.setLiftPositionHigh();
+//        Chuckbot.setLiftRunWithEncodersSTP();
+//        Chuckbot.setLiftMotorVelocity(4000.0);
+//        sleep(250);
+//        drive.followTrajectory(step4);
+//        drive.followTrajectory(step5);
+//        sleep(1000);
         drive.followTrajectory(step6);
-        drive.turn(Math.toRadians(40));
+        drive.turn(Math.toRadians(44));
         sleep(500);
 
         drive.setPoseEstimate(parkPose);
-
+        drive.followTrajectory(stepAd);
+        sleep(250);
         if(aprilTagId == 0){
             drive.followTrajectory(step7);
         }
