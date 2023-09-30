@@ -94,9 +94,9 @@ public class TestBotTeleop extends OpMode {
         boolean rightBumper = gamepad2.right_bumper;
 
 
-
-        doTurret();
-        doLift();
+//
+//        doTurret();
+//        doLift();
         doDrive();
 
 
@@ -208,284 +208,284 @@ public class TestBotTeleop extends OpMode {
     /**
      * Do Turret stuff...
      */
-    public void doTurret(){
-        switch(turretState) {
-
-            // Turret is in the start state
-            case turret_start:
-                myLogger.Debug("TURRET: STARTHERE,STARTHERE,STARTHERE,STARTHERE");
-                myLogger.Debug("turretState: "+turretState);
-                myLogger.Debug("liftState: "+liftState);
-                myLogger.Debug("gamepad2.b "+gamepad2.b);
-                myLogger.Debug("gamepad2.x "+gamepad2.x);
-                myLogger.Debug("gamepad2.a "+gamepad2.a);
-                myLogger.Debug("gamepad2.y "+gamepad2.y);
-                myLogger.Debug("Lift Encoder Counts Compared to Final Position: " + Math.abs(stevesRobot.getLiftEncoderCounts() - liftFinalPosition));
-
-
-                /** Some rambling to get my thoughts together...what is written here was under extreme duress and tiredness
-                 *
-                 * When b, x, a gamepad2 button is pushed have the lift extend 5-6 inches (how many encoder counts??)
-                 * so that the intake mechanism is clear of the chassis.  Once clear of the chassis then we can start
-                 * rotating to the appropriate position.
-                 *
-                 * Note:  I think we need another state here to let the lift come up to the desired level and
-                 * when there start to rotate.  We will only do the liftFinalPosition check once and as it stands
-                 * liftFinalPosition is never set.  So we need a new variable too
-                 *
-                 * So this assumes that the lift is not in any state other than start, i think if the lift is start state this works
-                 * however, if the lift is not in a start state, i think we don't want to "extend" the lift since it is already
-                 * being extended....does this make sense????
-                 *
-                 * what if the lift is extended but below the height that we need to go, do we extend the lift and then rotate? or
-                 * ignore what the "gunner" pushed
-                 *
-                 */
-
-                /**
-                 * So we are gonna turn the turret either now or later, so set the target position and remember it
-                 */
-                stevesRobot.turretRunWithoutEncoders();
-                if (gamepad2.b) {                                                                   // gamepad2.b button pushed
-                    stevesRobot.setTurretMotorTargetPosition(turret_right);                         // Set the target position for the turret
-                    turretFinalPosition = turret_right;                                             // Remember the target position for the turret
-                    buttonA_B_X_Pushed = true;                                                      // Remember that b, x or the a button was pushed
-                }
-                else if (gamepad2.x) {
-                    stevesRobot.setTurretMotorTargetPosition(turret_left);                          // Set the target position for the turret
-                    turretFinalPosition = turret_left;                                              // Remember the target position for the turret
-                    buttonA_B_X_Pushed = true;                                                      // Remember that b, x or the a button was pushed
-                }
-                else if (gamepad2.a) {
-                    stevesRobot.setTurretMotorTargetPosition(turret_back);                          // Set the target position for the turret
-                    turretFinalPosition = turret_back;                                              // Remember the target position for the turret
-                    buttonA_B_X_Pushed = true;                                                      // Remember that b, x or the a button was pushed
-                }
-
-                /**
-                 * So if the lift state is lift_start, that means the lift is in home position.  So start to extending it.
-                 */
-                if (buttonA_B_X_Pushed) {
-                    myLogger.Debug("IT HAS ENTERED BUTTON ABX IF STATEMENT");
-                    if (liftState == lState.lift_start) {                                              // is the lift in start state?
-                        myLogger.Debug("IT HAS ENTERED LIFT STATE BEING IN START");
-                        liftRotatePosition = 3000.0;                                                    // Remember the position to extend the lift to
-                        stevesRobot.setLiftMotorTargetPosition(-3000.0);                                 // Set the position to extend the lift to
-
-                        stevesRobot.liftRunWithEncodersSTP();
-                        stevesRobot.setLiftMotorVelocity(1500.0);                                       // Apply a velocity to the lift motor
-                        turretState = tState.turret_liftMovingToTargetRotatePosition;                  // New state, indicate that the lift is moving to target rotate position
-                    }
-
-                    /**
-                     * Lift state is not lift_start, we can rotate the turret as long as we are above the height of the chassis -AND- we are not retracting the lift
-                     */
-                    else {                                                                             // the lift is not in start state
-                        if (Math.abs(stevesRobot.getLiftEncoderCounts() + 2500) < 5.0 && // the lift is above where we can start to rotate -AND-
-                                liftState != lState.lift_retract) {                                   // the lift is not retracting (coming down)
-                            stevesRobot.turretRunWithEncodersSTP();                                     // Yes, so ensure the turret motor is running with set target position
-                            stevesRobot.setTurretMotorVelocity(600.0);                                 // Apply velocity to turret motor, note that the target position was set above
-                            turretState = tState.turret_turning;                                       // jump to turret_turning state since we don't need to wait for the lift
-                        }
-                    }
-                }                                                                                   // if a, b, or x button pushed
-
-                break;
-
-            // the lift is extending to the target rotate position
-            case turret_liftMovingToTargetRotatePosition:
-                myLogger.Debug("HAS ENTERED TARGET ROTATE POSITION CASE");
-                myLogger.Debug("Lift Encoder:", stevesRobot.getLiftEncoderCounts());
-                if(Math.abs(stevesRobot.getLiftEncoderCounts() + liftRotatePosition) < 5.0) {// Has the lift extended far enough to begin rotating the turret?
-                    myLogger.Debug("Lift Encoder:", stevesRobot.getLiftEncoderCounts());
-                    myLogger.Debug("HAS REACHED WITHIN 5 ENCODERS OF FINAL POSITION");
-                    myLogger.Debug("Turret Encoders After Lift has Gone Up: ", stevesRobot.getTurretEncoderCounts());
-                    stevesRobot.turretRunWithEncodersSTP();                                         // Yes, so ensure the turret motor is running with set target position
-                    stevesRobot.setTurretMotorVelocity(600.0);                                      // Apply velocity to turret motor, note that the target position was set above
-                                                                                                    // in the turret_start state when the appropriate button was pushed
-                    stevesRobot.setLiftMotorVelocity(0.0);                                          // Stop the lift motor
-                    turretState = tState.turret_turning;                                            // Indicate that the turret is now turning to the requested position
-                }
-                break;
-
-            // the turret is turning to the desired position
-            case turret_turning:
+//    public void doTurret(){
+//        switch(turretState) {
+//
+//            // Turret is in the start state
+//            case turret_start:
+//                myLogger.Debug("TURRET: STARTHERE,STARTHERE,STARTHERE,STARTHERE");
 //                myLogger.Debug("turretState: "+turretState);
-//                myLogger.Debug("TEC: " + stevesRobot.getTurretEncoderCounts());
-
-                if(Math.abs(stevesRobot.getTurretEncoderCounts() - turretFinalPosition) < 5.0) {    // Has the turret turned to the position requested?
-                    stevesRobot.setTurretMotorVelocity(0.0);                                        // Yes, stop the turret motor
-                    turretState = tState.turret_deposit;                                            // Indicate that the turret is now in the deposit position.  Note: the lift must
-
-                }
-
-                break;
-
-
-            // the turret is in the deposit position
-
-            case turret_deposit:
-                myLogger.Debug("turret deposit");
-                myLogger.Debug(" lift state: ", String.valueOf(liftState));
-
-                if(gamepad2.right_stick_button && liftState == lState.lift_deposit) {               // Has the right stick button on gamepad 2 been pushed AND the lift is in the
-                                                                                                    // deposit state?
-                    myStopWatch.startTime();                                                        // Yes, start the stop watch (we will give the deposit mechanism x number of
-                                                                                                    // seconds to deposit.
-                    stevesRobot.setTurretMotorPower(0.0);                                           // Stop the turret, the turret may have been adjusted by the gunner (see below)
-                    stevesRobot.setinTakeServoPosition(1.0);                                        // Have the intake mechanism deposit the cone
-                    turretState = tState.turret_returning;                                          // Indicate that the turret will be returning to home
-// "Just type 'do good'" -Joshua Lipke
-                }
-//                else{
-//                    stevesRobot.turretRunWithoutEncoders();
-//                    stevesRobot.setTurretMotorPower(0.40 * gamepad2.right_stick_x);                   // Allow the gunner to "adjust" the turret
+//                myLogger.Debug("liftState: "+liftState);
+//                myLogger.Debug("gamepad2.b "+gamepad2.b);
+//                myLogger.Debug("gamepad2.x "+gamepad2.x);
+//                myLogger.Debug("gamepad2.a "+gamepad2.a);
+//                myLogger.Debug("gamepad2.y "+gamepad2.y);
+////                myLogger.Debug("Lift Encoder Counts Compared to Final Position: " + Math.abs(stevesRobot.getLiftEncoderCounts() - liftFinalPosition));
+//
+//
+//                /** Some rambling to get my thoughts together...what is written here was under extreme duress and tiredness
+//                 *
+//                 * When b, x, a gamepad2 button is pushed have the lift extend 5-6 inches (how many encoder counts??)
+//                 * so that the intake mechanism is clear of the chassis.  Once clear of the chassis then we can start
+//                 * rotating to the appropriate position.
+//                 *
+//                 * Note:  I think we need another state here to let the lift come up to the desired level and
+//                 * when there start to rotate.  We will only do the liftFinalPosition check once and as it stands
+//                 * liftFinalPosition is never set.  So we need a new variable too
+//                 *
+//                 * So this assumes that the lift is not in any state other than start, i think if the lift is start state this works
+//                 * however, if the lift is not in a start state, i think we don't want to "extend" the lift since it is already
+//                 * being extended....does this make sense????
+//                 *
+//                 * what if the lift is extended but below the height that we need to go, do we extend the lift and then rotate? or
+//                 * ignore what the "gunner" pushed
+//                 *
+//                 */
+//
+//                /**
+//                 * So we are gonna turn the turret either now or later, so set the target position and remember it
+//                 */
+////                stevesRobot.turretRunWithoutEncoders();
+////                if (gamepad2.b) {                                                                   // gamepad2.b button pushed
+////                    stevesRobot.setTurretMotorTargetPosition(turret_right);                         // Set the target position for the turret
+////                    turretFinalPosition = turret_right;                                             // Remember the target position for the turret
+////                    buttonA_B_X_Pushed = true;                                                      // Remember that b, x or the a button was pushed
+////                }
+////                else if (gamepad2.x) {
+////                    stevesRobot.setTurretMotorTargetPosition(turret_left);                          // Set the target position for the turret
+////                    turretFinalPosition = turret_left;                                              // Remember the target position for the turret
+////                    buttonA_B_X_Pushed = true;                                                      // Remember that b, x or the a button was pushed
+////                }
+////                else if (gamepad2.a) {
+////                    stevesRobot.setTurretMotorTargetPosition(turret_back);                          // Set the target position for the turret
+////                    turretFinalPosition = turret_back;                                              // Remember the target position for the turret
+////                    buttonA_B_X_Pushed = true;                                                      // Remember that b, x or the a button was pushed
+////                }
+//
+//                /**
+//                 * So if the lift state is lift_start, that means the lift is in home position.  So start to extending it.
+//                 */
+////                if (buttonA_B_X_Pushed) {
+////                    myLogger.Debug("IT HAS ENTERED BUTTON ABX IF STATEMENT");
+////                    if (liftState == lState.lift_start) {                                              // is the lift in start state?
+////                        myLogger.Debug("IT HAS ENTERED LIFT STATE BEING IN START");
+////                        liftRotatePosition = 3000.0;                                                    // Remember the position to extend the lift to
+////                        stevesRobot.setLiftMotorTargetPosition(-3000.0);                                 // Set the position to extend the lift to
+////
+////                        stevesRobot.liftRunWithEncodersSTP();
+////                        stevesRobot.setLiftMotorVelocity(1500.0);                                       // Apply a velocity to the lift motor
+////                        turretState = tState.turret_liftMovingToTargetRotatePosition;                  // New state, indicate that the lift is moving to target rotate position
+////                    }
+//
+//                    /**
+//                     * Lift state is not lift_start, we can rotate the turret as long as we are above the height of the chassis -AND- we are not retracting the lift
+//                     */
+////                    else {                                                                             // the lift is not in start state
+////                        if (Math.abs(stevesRobot.getLiftEncoderCounts() + 2500) < 5.0 && // the lift is above where we can start to rotate -AND-
+////                                liftState != lState.lift_retract) {                                   // the lift is not retracting (coming down)
+////                            stevesRobot.turretRunWithEncodersSTP();                                     // Yes, so ensure the turret motor is running with set target position
+////                            stevesRobot.setTurretMotorVelocity(600.0);                                 // Apply velocity to turret motor, note that the target position was set above
+////                            turretState = tState.turret_turning;                                       // jump to turret_turning state since we don't need to wait for the lift
+////                        }
+////                    }
+//                }                                                                                   // if a, b, or x button pushed
+//
+//                break;
+//
+//            // the lift is extending to the target rotate position
+//            case turret_liftMovingToTargetRotatePosition:
+//                myLogger.Debug("HAS ENTERED TARGET ROTATE POSITION CASE");
+//                myLogger.Debug("Lift Encoder:", stevesRobot.getLiftEncoderCounts());
+//                if(Math.abs(stevesRobot.getLiftEncoderCounts() + liftRotatePosition) < 5.0) {// Has the lift extended far enough to begin rotating the turret?
+//                    myLogger.Debug("Lift Encoder:", stevesRobot.getLiftEncoderCounts());
+//                    myLogger.Debug("HAS REACHED WITHIN 5 ENCODERS OF FINAL POSITION");
+//                    myLogger.Debug("Turret Encoders After Lift has Gone Up: ", stevesRobot.getTurretEncoderCounts());
+//                    stevesRobot.turretRunWithEncodersSTP();                                         // Yes, so ensure the turret motor is running with set target position
+//                    stevesRobot.setTurretMotorVelocity(600.0);                                      // Apply velocity to turret motor, note that the target position was set above
+//                                                                                                    // in the turret_start state when the appropriate button was pushed
+//                    stevesRobot.setLiftMotorVelocity(0.0);                                          // Stop the lift motor
+//                    turretState = tState.turret_turning;                                            // Indicate that the turret is now turning to the requested position
+//                }
+//                break;
+//
+//            // the turret is turning to the desired position
+//            case turret_turning:
+////                myLogger.Debug("turretState: "+turretState);
+////                myLogger.Debug("TEC: " + stevesRobot.getTurretEncoderCounts());
+//
+//                if(Math.abs(stevesRobot.getTurretEncoderCounts() - turretFinalPosition) < 5.0) {    // Has the turret turned to the position requested?
+//                    stevesRobot.setTurretMotorVelocity(0.0);                                        // Yes, stop the turret motor
+//                    turretState = tState.turret_deposit;                                            // Indicate that the turret is now in the deposit position.  Note: the lift must
 //
 //                }
-
-
-                break;
-
-            // turret is starting to return home
-            case turret_returning:
-//                myLogger.Debug("turretState: "+ turretState);
-//                myLogger.Debug("Y: " + gamepad2.y);
-                telemetry.addData("elapsed time: ", myStopWatch.getElaspedTime());
-                telemetry.update();
-                if(myStopWatch.getElaspedTime() >= 1.5) {                                           // Has deposit been completed??
-                    if(buttonDpadGround){
-                        stevesRobot.setLiftMotorTargetPosition(-2500);
-                        stevesRobot.setLiftMotorVelocity(-500);
-                        if(Math.abs(stevesRobot.getLiftEncoderCounts() - 2500) < 5.0){
-                            buttonDpadGround = false;
-                        }
-                    }
-                    stevesRobot.setTurretMotorTargetPosition(turret_home);                          // Yes, indicate to have the turret return to home
-                    stevesRobot.setTurretMotorVelocity(500.0);                                      // Apply a velocity
-                    turretState = tState.turret_returningHome;                                      // Indicate the turret is returning home
-                }
-
-                break;
-
-            // turret is returning to home
-            case turret_returningHome:
-//                myLogger.Debug("turretState: "+turretState);
-//                myLogger.Debug("TEC: " + stevesRobot.getSortedEncoderCount());
-
-                if(Math.abs(stevesRobot.getTurretEncoderCounts() - turret_home) < 10.0) {            // Has the turret returned home?
-                    myLogger.Debug("WE HAVE FINISHED RETURNING HOME ON TURRET");
-                    stevesRobot.setTurretMotorVelocity(0.0);                                        // Yes, stop the turret motor
-                    turretState = tState.turret_start;                                              // Indicate the turret is now back at start
-
-                }
-                break;
-
-            // when turret is in an undefined state - should never happen but you never know
-            default:
-//                myLogger.Debug("turretState: "+turretState);
-                turretState = tState.turret_start;                                                  // Indicate that the turret is in a start state
-                break;
-
-        }
-
-        // Chicken switch, aka get me the *&^%$# out of here!
-
-    }
+//
+//                break;
+//
+//
+//            // the turret is in the deposit position
+//
+//            case turret_deposit:
+//                myLogger.Debug("turret deposit");
+//                myLogger.Debug(" lift state: ", String.valueOf(liftState));
+//
+//                if(gamepad2.right_stick_button && liftState == lState.lift_deposit) {               // Has the right stick button on gamepad 2 been pushed AND the lift is in the
+//                                                                                                    // deposit state?
+//                    myStopWatch.startTime();                                                        // Yes, start the stop watch (we will give the deposit mechanism x number of
+//                                                                                                    // seconds to deposit.
+//                    stevesRobot.setTurretMotorPower(0.0);                                           // Stop the turret, the turret may have been adjusted by the gunner (see below)
+//                    stevesRobot.setinTakeServoPosition(1.0);                                        // Have the intake mechanism deposit the cone
+//                    turretState = tState.turret_returning;                                          // Indicate that the turret will be returning to home
+//// "Just type 'do good'" -Joshua Lipke
+//                }
+////                else{
+////                    stevesRobot.turretRunWithoutEncoders();
+////                    stevesRobot.setTurretMotorPower(0.40 * gamepad2.right_stick_x);                   // Allow the gunner to "adjust" the turret
+////
+////                }
+//
+//
+//                break;
+//
+//            // turret is starting to return home
+//            case turret_returning:
+////                myLogger.Debug("turretState: "+ turretState);
+////                myLogger.Debug("Y: " + gamepad2.y);
+//                telemetry.addData("elapsed time: ", myStopWatch.getElaspedTime());
+//                telemetry.update();
+//                if(myStopWatch.getElaspedTime() >= 1.5) {                                           // Has deposit been completed??
+//                    if(buttonDpadGround){
+//                        stevesRobot.setLiftMotorTargetPosition(-2500);
+//                        stevesRobot.setLiftMotorVelocity(-500);
+//                        if(Math.abs(stevesRobot.getLiftEncoderCounts() - 2500) < 5.0){
+//                            buttonDpadGround = false;
+//                        }
+//                    }
+//                    stevesRobot.setTurretMotorTargetPosition(turret_home);                          // Yes, indicate to have the turret return to home
+//                    stevesRobot.setTurretMotorVelocity(500.0);                                      // Apply a velocity
+//                    turretState = tState.turret_returningHome;                                      // Indicate the turret is returning home
+//                }
+//
+//                break;
+//
+//            // turret is returning to home
+//            case turret_returningHome:
+////                myLogger.Debug("turretState: "+turretState);
+////                myLogger.Debug("TEC: " + stevesRobot.getSortedEncoderCount());
+//
+//                if(Math.abs(stevesRobot.getTurretEncoderCounts() - turret_home) < 10.0) {            // Has the turret returned home?
+//                    myLogger.Debug("WE HAVE FINISHED RETURNING HOME ON TURRET");
+//                    stevesRobot.setTurretMotorVelocity(0.0);                                        // Yes, stop the turret motor
+//                    turretState = tState.turret_start;                                              // Indicate the turret is now back at start
+//
+//                }
+//                break;
+//
+//            // when turret is in an undefined state - should never happen but you never know
+//            default:
+////                myLogger.Debug("turretState: "+turretState);
+//                turretState = tState.turret_start;                                                  // Indicate that the turret is in a start state
+//                break;
+//
+//        }
+//
+//        // Chicken switch, aka get me the *&^%$# out of here!
+//
+//    }
 
     /**
      * Does lift work...
      */
-    public void doLift(){
-        switch(liftState){
-            case lift_start:
-                myLogger.Debug("LIFT: STARTHERE,STARTHERE,STARTHERE,STARTHERE");
-                myLogger.Debug("turretState: "+turretState);
-                myLogger.Debug("liftState: "+liftState);
-                myLogger.Debug("gamepad2.dpad_up "+gamepad2.dpad_up);
-                myLogger.Debug("gamepad2.dpad_right "+gamepad2.dpad_right);
-                myLogger.Debug("gamepad2.dpad_left "+gamepad2.dpad_left);
-                myLogger.Debug("gamepad2.dpad_down "+gamepad2.dpad_down);
-
-                if (gamepad2.dpad_down) {
-                    stevesRobot.setLiftMotorTargetPosition(-lift_low);
-                    liftFinalPosition = lift_low;
-                    liftState = lState.lift_extending;
-                    stevesRobot.liftRunWithEncodersSTP();
-                    stevesRobot.setLiftMotorVelocity(1500.0);
-                }
-
-                else if (gamepad2.dpad_left) {
-                    stevesRobot.setLiftMotorTargetPosition(-lift_ground);
-                    liftFinalPosition = lift_ground;
-                    buttonDpadGround = true;
-                    liftState = lState.lift_extending;
-                    stevesRobot.liftRunWithEncodersSTP();
-                    stevesRobot.setLiftMotorVelocity(1500.0);
-
-                }
-//"just type 'do good'" -josh again
-                else if (gamepad2.dpad_right) {
-
-                    stevesRobot.setLiftMotorTargetPosition(-lift_middle);
-                    liftFinalPosition = lift_middle;
-                    liftState = lState.lift_extending;
-                    stevesRobot.liftRunWithEncodersSTP();
-                    stevesRobot.setLiftMotorVelocity(1500.0);
-
-                    }
-
-                else if (gamepad2.dpad_up) {
-                    stevesRobot.setLiftMotorTargetPosition(-lift_high);
-                    liftFinalPosition = lift_high;
-                    stevesRobot.liftRunWithEncodersSTP();
-                    stevesRobot.setLiftMotorVelocity(1500.0);
-                    liftState = lState.lift_extending;
-                }
-                else if(turretState != tState.turret_liftMovingToTargetRotatePosition){
-                    telemetry.addData("ENCODERS OF LIFT:", stevesRobot.getLiftEncoderCounts());
-                    stevesRobot.liftRunWithoutEncoders();
-                    stevesRobot.setLiftMotorPower(-0.75 * (-gamepad2.right_stick_y));
-
-
-                }
-
-
-
-                break;
-
-
-            case lift_extending:
-                if(Math.abs(stevesRobot.getLiftEncoderCounts() + liftFinalPosition) < 5.0) {
-                    stevesRobot.setLiftPower(0.0);
-                    liftState = lState.lift_deposit;
-                }
-
-                break;
-            case lift_deposit:
-                if(turretState == tState.turret_returningHome){
-                    stevesRobot.setLiftMotorTargetPosition(-lift_ground);
-                    stevesRobot.setLiftMotorVelocity(1500.0);
-                    liftState = lState.lift_retract;
-
-                }
-//                else{
-//                    stevesRobot.turretRunWithoutEncoders();
-//                    stevesRobot.setTurretMotorPower(0.40 * gamepad2.right_stick_x);                   // Allow the gunner to "adjust" the turret
+//    public void doLift(){
+//        switch(liftState){
+//            case lift_start:
+//                myLogger.Debug("LIFT: STARTHERE,STARTHERE,STARTHERE,STARTHERE");
+//                myLogger.Debug("turretState: "+turretState);
+//                myLogger.Debug("liftState: "+liftState);
+//                myLogger.Debug("gamepad2.dpad_up "+gamepad2.dpad_up);
+//                myLogger.Debug("gamepad2.dpad_right "+gamepad2.dpad_right);
+//                myLogger.Debug("gamepad2.dpad_left "+gamepad2.dpad_left);
+//                myLogger.Debug("gamepad2.dpad_down "+gamepad2.dpad_down);
+//
+//                if (gamepad2.dpad_down) {
+//                    stevesRobot.setLiftMotorTargetPosition(-lift_low);
+//                    liftFinalPosition = lift_low;
+//                    liftState = lState.lift_extending;
+//                    stevesRobot.liftRunWithEncodersSTP();
+//                    stevesRobot.setLiftMotorVelocity(1500.0);
+//                }
+//
+//                else if (gamepad2.dpad_left) {
+//                    stevesRobot.setLiftMotorTargetPosition(-lift_ground);
+//                    liftFinalPosition = lift_ground;
+//                    buttonDpadGround = true;
+//                    liftState = lState.lift_extending;
+//                    stevesRobot.liftRunWithEncodersSTP();
+//                    stevesRobot.setLiftMotorVelocity(1500.0);
 //
 //                }
-                break;
-            case lift_retract:
-                if(Math.abs(stevesRobot.getLiftEncoderCounts() + lift_ground) < 5.0) {
-                    myLogger.Debug("WE HAVE FINISHED RETURNING HOME ON LIFT");
-                    stevesRobot.setLiftMotorVelocity(0.0);
-                    stevesRobot.liftRunWithoutEncoders();
-                    liftState = lState.lift_start;
-                }
-                break;
-            default:
-                liftState = lState.lift_start;
-        }
-    }
+////"just type 'do good'" -josh again
+//                else if (gamepad2.dpad_right) {
+//
+//                    stevesRobot.setLiftMotorTargetPosition(-lift_middle);
+//                    liftFinalPosition = lift_middle;
+//                    liftState = lState.lift_extending;
+//                    stevesRobot.liftRunWithEncodersSTP();
+//                    stevesRobot.setLiftMotorVelocity(1500.0);
+//
+//                    }
+//
+//                else if (gamepad2.dpad_up) {
+//                    stevesRobot.setLiftMotorTargetPosition(-lift_high);
+//                    liftFinalPosition = lift_high;
+//                    stevesRobot.liftRunWithEncodersSTP();
+//                    stevesRobot.setLiftMotorVelocity(1500.0);
+//                    liftState = lState.lift_extending;
+//                }
+//                else if(turretState != tState.turret_liftMovingToTargetRotatePosition){
+//                    telemetry.addData("ENCODERS OF LIFT:", stevesRobot.getLiftEncoderCounts());
+//                    stevesRobot.liftRunWithoutEncoders();
+//                    stevesRobot.setLiftMotorPower(-0.75 * (-gamepad2.right_stick_y));
+//
+//
+//                }
+//
+//
+//
+//                break;
+//
+//
+//            case lift_extending:
+//                if(Math.abs(stevesRobot.getLiftEncoderCounts() + liftFinalPosition) < 5.0) {
+//                    stevesRobot.setLiftPower(0.0);
+//                    liftState = lState.lift_deposit;
+//                }
+//
+//                break;
+//            case lift_deposit:
+//                if(turretState == tState.turret_returningHome){
+//                    stevesRobot.setLiftMotorTargetPosition(-lift_ground);
+//                    stevesRobot.setLiftMotorVelocity(1500.0);
+//                    liftState = lState.lift_retract;
+//
+//                }
+////                else{
+////                    stevesRobot.turretRunWithoutEncoders();
+////                    stevesRobot.setTurretMotorPower(0.40 * gamepad2.right_stick_x);                   // Allow the gunner to "adjust" the turret
+////
+////                }
+//                break;
+//            case lift_retract:
+//                if(Math.abs(stevesRobot.getLiftEncoderCounts() + lift_ground) < 5.0) {
+//                    myLogger.Debug("WE HAVE FINISHED RETURNING HOME ON LIFT");
+//                    stevesRobot.setLiftMotorVelocity(0.0);
+//                    stevesRobot.liftRunWithoutEncoders();
+//                    liftState = lState.lift_start;
+//                }
+//                break;
+//            default:
+//                liftState = lState.lift_start;
+//        }
+//    }
     public void doDrive(){
         //double autoHeading = RoboRaidersProperties.getHeading();
         // Read inverse IMU heading, as the IMU heading is CW positive
@@ -537,25 +537,25 @@ public class TestBotTeleop extends OpMode {
             backRightPower = (frontLeftPower*0.65) + (0.2 * lTrigger);
         }
 
-        if(gamepad2.right_bumper) {
-            stevesRobot.setinTakeServoPosition(0.0);
-        }
-        else if(gamepad2.left_bumper) {
-            stevesRobot.setinTakeServoPosition(1.0);
-        }
-        else if(turretState != tState.turret_turning &&  turretState != tState.turret_returningHome) {// No
-            stevesRobot.turretRunWithoutEncoders();
-            stevesRobot.setTurretMotorPower(0.40 * gamepad2.right_stick_x);                   // Allow the gunner to "adjust" the turret
-
-        }
-        if(gamepad2.y && turretState != tState.turret_start) {                                      // The y button on gamepad2 has been pushed AND the turret is not in the start state
-
-            stevesRobot.setTurretMotorVelocity(0.0);                                                // Stop the turret
-            stevesRobot.setLiftMotorVelocity(0.0);
-            liftState = lState.lift_start;
-            turretState = tState.turret_start;                                                      // Indicate that the turret is in a start state
-
-        }
+//        if(gamepad2.right_bumper) {
+//            stevesRobot.setinTakeServoPosition(0.0);
+//        }
+//        else if(gamepad2.left_bumper) {
+//            stevesRobot.setinTakeServoPosition(1.0);
+//        }
+//        else if(turretState != tState.turret_turning &&  turretState != tState.turret_returningHome) {// No
+//            stevesRobot.turretRunWithoutEncoders();
+//            stevesRobot.setTurretMotorPower(0.40 * gamepad2.right_stick_x);                   // Allow the gunner to "adjust" the turret
+//
+//        }
+//        if(gamepad2.y && turretState != tState.turret_start) {                                      // The y button on gamepad2 has been pushed AND the turret is not in the start state
+//
+//            stevesRobot.setTurretMotorVelocity(0.0);                                                // Stop the turret
+//            stevesRobot.setLiftMotorVelocity(0.0);
+//            liftState = lState.lift_start;
+//            turretState = tState.turret_start;                                                      // Indicate that the turret is in a start state
+//
+//        }
         stevesRobot.setDriveMotorPower(
                 frontLeftPower*0.65,
                 frontRightPower*0.65,
