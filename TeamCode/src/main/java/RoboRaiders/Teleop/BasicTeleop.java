@@ -45,25 +45,25 @@ public class BasicTeleop extends OpMode {
         telemetry.addData("| Gamepad2 Right Bumper:  ", "Grabs cone                      |");
         telemetry.addData("| Gamepad2 Left Bumper:   ", "Release cone                    |");
         telemetry.addData("+-------------------------", "--------------------------------+");
-        telemetry.addData("LIFT ENCODERS: ", stevesRobot.getLiftEncoderCounts());
-        stevesRobot.setTurretMotorPower(0.55*gamepad2.right_stick_x);  //* moves the turret at 55% maximum power
-        stevesRobot.setLiftMotorPower(-gamepad2.left_stick_y * 2.3);        //* moves the lift up and down at 221.0329%
+//        telemetry.addData("LIFT ENCODERS: ", stevesRobot.getLiftEncoderCounts());
+//        stevesRobot.setTurretMotorPower(0.55*gamepad2.right_stick_x);  //* moves the turret at 55% maximum power
+//        stevesRobot.setLiftMotorPower(-gamepad2.left_stick_y * 2.3);        //* moves the lift up and down at 221.0329%
+//
+//        telemetry.addData("Lift Motor Power: ", String.valueOf(stevesRobot.getLiftMotorPower()) );
 
-        telemetry.addData("Lift Motor Power: ", String.valueOf(stevesRobot.getLiftMotorPower()) );
 
-
-        if (gamepad2.left_bumper) {
-            stevesRobot.setinTakeServoPosition(1.0);                                        // Have the intake mechanism deposit the cone
-            telemetry.addData("Cone being deposited ", "press right bumper to intake next cone");
-        }
-        else if (gamepad2.right_bumper) {
-            stevesRobot.setinTakeServoPosition(0.0);                                        // Have the intake grab a cone
-            telemetry.addData("Cone grabbed ", "press left bumper to deposit cone");
-        }
-        telemetry.addData("BOT HEADING BOT HEADING",stevesRobot.getHeading());
-        doDrive();
-
-        telemetry.update();
+//        if (gamepad2.left_bumper) {
+//            stevesRobot.setinTakeServoPosition(1.0);                                        // Have the intake mechanism deposit the cone
+//            telemetry.addData("Cone being deposited ", "press right bumper to intake next cone");
+//        }
+//        else if (gamepad2.right_bumper) {
+//            stevesRobot.setinTakeServoPosition(0.0);                                        // Have the intake grab a cone
+//            telemetry.addData("Cone grabbed ", "press left bumper to deposit cone");
+//        }
+//        telemetry.addData("BOT HEADING BOT HEADING",stevesRobot.getHeading());
+//        doDrive();
+//
+//        telemetry.update();
     }
 
 
